@@ -1,0 +1,15 @@
+# Define modman-managed symlinks
+# file format:
+# source destination
+
+admin                                wp-content/plugins/woocommerce-tab-manager/admin
+assets                               wp-content/plugins/woocommerce-tab-manager/assets
+i18n                                 wp-content/plugins/woocommerce-tab-manager/i18n
+lib                                  wp-content/plugins/woocommerce-tab-manager/lib
+templates                            wp-content/plugins/woocommerce-tab-manager/templates
+woo-includes                         wp-content/plugins/woocommerce-tab-manager/woo-includes
+changelog.txt                        wp-content/plugins/woocommerce-tab-manager/changelog.txt
+readme.txt                           wp-content/plugins/woocommerce-tab-manager/readme.txt
+woocommerce-tab-manager-ajax.php     wp-content/plugins/woocommerce-tab-manager/woocommerce-tab-manager-ajax.php
+woocommerce-tab-manager-template.php wp-content/plugins/woocommerce-tab-manager/woocommerce-tab-manager-template.php
+woocommerce-tab-manager.php          wp-content/plugins/woocommerce-tab-manager/woocommerce-tab-manager.php

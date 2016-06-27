@@ -1,0 +1,760 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Email Cart v1.11\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2014-09-11 14:32:02+0000\n"
+"Last-Translator: admin <brent@kairaweb.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: CSL v1.x\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#. translators: plugin header field 'Name'
+#: email-cart.php:0
+#@ email-cart
+msgid "WooCommerce Email Cart"
+msgstr ""
+
+#. translators: plugin header field 'PluginURI'
+#: email-cart.php:0
+#@ email-cart
+msgid "http://codecanyon.net/item/email-cart-for-woocommerce/5568059"
+msgstr ""
+
+#. translators: plugin header field 'Description'
+#: email-cart.php:0
+#@ email-cart
+msgid "Create a WooCommerce cart and send it to any email address."
+msgstr ""
+
+#. translators: plugin header field 'Author'
+#: email-cart.php:0
+#@ email-cart
+msgid "cxThemes"
+msgstr ""
+
+#. translators: plugin header field 'AuthorURI'
+#: email-cart.php:0
+#@ email-cart
+msgid "http://codecanyon.net/user/cxThemes"
+msgstr ""
+
+#: email-cart.php:550
+#: email-cart.php:885
+#@ email-cart
+msgid "Your cart was sent successfully."
+msgstr ""
+
+#: email-cart.php:586
+#: email-cart.php:587
+#: email-cart.php:882
+#: email-cart.php:1160
+#: email-cart.php:1612
+#: settings/class-email-cart-settings.php:79
+#@ email-cart
+msgid "Email Cart"
+msgstr ""
+
+#: email-cart.php:668
+#: email-cart.php:772
+#@ email-cart
+msgid "Are you sure you want to remove the selected items? If you have previously reduced this item's stock, or this order was submitted by a customer, you will need to manually restore the item's stock."
+msgstr ""
+
+#: email-cart.php:669
+#: email-cart.php:773
+#@ email-cart
+msgid "Please select some items."
+msgstr ""
+
+#: email-cart.php:670
+#: email-cart.php:774
+#@ email-cart
+msgid "Remove this item meta?"
+msgstr ""
+
+#: email-cart.php:671
+#: email-cart.php:775
+#@ email-cart
+msgid "Remove this attribute?"
+msgstr ""
+
+#: email-cart.php:672
+#: email-cart.php:776
+#@ email-cart
+msgid "Name"
+msgstr ""
+
+#: email-cart.php:673
+#: email-cart.php:777
+#@ email-cart
+msgid "Remove"
+msgstr ""
+
+#: email-cart.php:674
+#: email-cart.php:778
+#@ email-cart
+msgid "Click to toggle"
+msgstr ""
+
+#: email-cart.php:675
+#: email-cart.php:779
+#@ email-cart
+msgid "Value(s)"
+msgstr ""
+
+#: email-cart.php:676
+#: email-cart.php:780
+#@ email-cart
+msgid "Enter some text, or some attributes by pipe (|) separating values."
+msgstr ""
+
+#: email-cart.php:677
+#: email-cart.php:781
+#@ email-cart
+msgid "Visible on the product page"
+msgstr ""
+
+#: email-cart.php:678
+#: email-cart.php:782
+#@ email-cart
+msgid "Used for variations"
+msgstr ""
+
+#: email-cart.php:679
+#: email-cart.php:783
+#@ email-cart
+msgid "Enter a name for the new attribute term:"
+msgstr ""
+
+#: email-cart.php:680
+#: email-cart.php:784
+#@ email-cart
+msgid "Calculate totals based on order items, discounts, and shipping?"
+msgstr ""
+
+#: email-cart.php:681
+#: email-cart.php:785
+#@ email-cart
+msgid "Calculate line taxes? This will calculate taxes based on the customers country. If no billing/shipping is set it will use the store base country."
+msgstr ""
+
+#: email-cart.php:682
+#: email-cart.php:786
+#@ email-cart
+msgid "Copy billing information to shipping information? This will remove any currently entered shipping information."
+msgstr ""
+
+#: email-cart.php:683
+#: email-cart.php:787
+#@ email-cart
+msgid "Load the customer's billing information? This will remove any currently entered billing information."
+msgstr ""
+
+#: email-cart.php:684
+#: email-cart.php:788
+#@ email-cart
+msgid "Load the customer's shipping information? This will remove any currently entered shipping information."
+msgstr ""
+
+#: email-cart.php:685
+#: email-cart.php:789
+#@ email-cart
+msgid "Featured"
+msgstr ""
+
+#: email-cart.php:688
+#: email-cart.php:792
+#@ email-cart
+msgid "No customer selected"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:126
+#, php-format
+#@ email-cart
+msgid ""
+"Hi There,\n"
+"\n"
+"Please find a link below to your cart on our online store where your items have already been added.\n"
+"\n"
+"Here is what you will find in your cart:\n"
+"[product_items]\n"
+"\n"
+"You can now easily checkout and pay, or, continue browsing and adding other items to your cart\n"
+"\n"
+"If you are a new customer you may need to register your details to create a new account. If you are returning, please just log in to finish your checkout.\n"
+"\n"
+"[link]\n"
+"\n"
+"Thanks!\n"
+"\n"
+"The %s Team"
+msgstr ""
+
+#: email-cart.php:932
+#@ email-cart
+msgid "Step 1:"
+msgstr ""
+
+#: email-cart.php:943
+#@ email-cart
+msgid "Add Products to your Cart"
+msgstr ""
+
+#: email-cart.php:946
+#@ email-cart
+msgid "Search and add products to email the cart to a customer. They can then log-in or register to checkout and pay via the existing store settings."
+msgstr ""
+
+#: email-cart.php:958
+#@ email-cart
+msgid "Item"
+msgstr ""
+
+#: email-cart.php:963
+#@ email-cart
+msgid "Tax Class"
+msgstr ""
+
+#: email-cart.php:963
+#@ email-cart
+msgid "Tax class for the line item"
+msgstr ""
+
+#: email-cart.php:292
+#: email-cart.php:966
+#@ email-cart
+msgid "Qty"
+msgstr ""
+
+#: email-cart.php:968
+#@ email-cart
+msgid "Totals"
+msgstr ""
+
+#: email-cart.php:968
+#@ email-cart
+msgid "Line subtotals are before pre-tax discounts, totals are after."
+msgstr ""
+
+#: email-cart.php:295
+#: email-cart.php:425
+#: email-cart.php:971
+#@ email-cart
+msgid "Tax"
+msgstr ""
+
+#: email-cart.php:981
+#@ email-cart
+msgid "Actions"
+msgstr ""
+
+#: email-cart.php:982
+#@ email-cart
+msgid "Edit"
+msgstr ""
+
+#: email-cart.php:983
+#@ email-cart
+msgid "Delete Lines"
+msgstr ""
+
+#: email-cart.php:987
+#@ email-cart
+msgid "Apply"
+msgstr ""
+
+#: email-cart.php:991
+#@ email-cart
+msgid "Search for a product&hellip;"
+msgstr ""
+
+#: email-cart.php:992
+#@ email-cart
+msgid "Add item(s)"
+msgstr ""
+
+#: email-cart.php:1003
+#@ email-cart
+msgid "Landing Page"
+msgstr ""
+
+#: email-cart.php:1004
+#@ email-cart
+msgid "Select whether to direct users to the Cart or the Checkout Page"
+msgstr ""
+
+#: email-cart.php:1009
+#: email-cart.php:1594
+#@ email-cart
+msgid "Cart"
+msgstr ""
+
+#: email-cart.php:1010
+#: email-cart.php:1595
+#@ email-cart
+msgid "Checkout"
+msgstr ""
+
+#: email-cart.php:1031
+#@ email-cart
+msgid "Step 2:"
+msgstr ""
+
+#: email-cart.php:1031
+#@ email-cart
+msgid "Email"
+msgstr ""
+
+#: email-cart.php:1041
+#@ email-cart
+msgid "Email Address"
+msgstr ""
+
+#: email-cart.php:1042
+#@ email-cart
+msgid "Enter the email address you would like to send this cart to. (Separate multiple addresses with a comma)"
+msgstr ""
+
+#: email-cart.php:1083
+#@ email-cart
+msgid "Email Subject"
+msgstr ""
+
+#: email-cart.php:1087
+#, php-format
+#@ email-cart
+msgid "Shopping Cart from %s"
+msgstr ""
+
+#: email-cart.php:1094
+#@ email-cart
+msgid "Email Content"
+msgstr ""
+
+#: email-cart.php:1095
+#@ email-cart
+msgid "Edit the email message. [Shortcodes] will replaced will relevant content."
+msgstr ""
+
+#: email-cart.php:1106
+#@ email-cart
+msgid "When you've finished adding products and preparing your email, then send your cart."
+msgstr ""
+
+#: email-cart.php:1109
+#@ email-cart
+msgid "Send Cart"
+msgstr ""
+
+#: email-cart.php:1127
+#@ email-cart
+msgid "Cart URL"
+msgstr ""
+
+#: email-cart.php:1137
+#@ email-cart
+msgid "Alternatively copy this link to share via any other app (Email Newsletter, Social Network, etc)."
+msgstr ""
+
+#: email-cart.php:1336
+#@ email-cart
+msgid "Product ID:"
+msgstr ""
+
+#: email-cart.php:1339
+#@ email-cart
+msgid "Variation ID:"
+msgstr ""
+
+#: email-cart.php:1342
+#@ email-cart
+msgid "Product SKU:"
+msgstr ""
+
+#: email-cart.php:1391
+#@ email-cart
+msgid "Tax class"
+msgstr ""
+
+#: email-cart.php:1398
+#@ email-cart
+msgid "Standard"
+msgstr ""
+
+#: email-cart.php:1418
+#@ email-cart
+msgid "Total"
+msgstr ""
+
+#: email-cart.php:1420
+#@ email-cart
+msgid "Subtotal"
+msgstr ""
+
+#: email-cart.php:1442
+#: email-cart.php:1560
+#@ email-cart
+msgid "Email this Cart"
+msgstr ""
+
+#: email-cart.php:1460
+#@ email-cart
+msgid "Close"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:161
+#, php-format
+#@ email-cart
+msgid ""
+"Hi,\n"
+"\n"
+"I’ve created a cart for you on %s. Click the link below to view it. \n"
+"Here is what it contains:\n"
+"[product_items]\n"
+"\n"
+"You can now easily edit it, checkout and pay, or, browse around the store and continue adding other items to your cart. \n"
+"\n"
+"If you are a new customer you may need to register your details to create a new account to checkout. If you are returning, just log in to finish your checkout.\n"
+"\n"
+"[link]\n"
+"\n"
+"Thanks!\n"
+"\n"
+"The %s Team"
+msgstr ""
+
+#: email-cart.php:1564
+#: email-cart.php:1571
+#: email-cart.php:1579
+#@ email-cart
+msgid "Separate more than one with a comma (,)"
+msgstr ""
+
+#: email-cart.php:1585
+#, php-format
+#@ email-cart
+msgid "View my Cart on %s"
+msgstr ""
+
+#: email-cart.php:1597
+#@ email-cart
+msgid "Choose which page the user will land. Only visible to Admin level user's. That's you!"
+msgstr ""
+
+#: email-cart.php:1608
+#@ email-cart
+msgid "Edit the email content above as you wish. The [placeholder] items will add the appropriate content when the email is sent to your recipients, so make sure you keep them!"
+msgstr ""
+
+#: email-cart.php:1619
+#@ email-cart
+msgid "or Share the Link Anywhere!"
+msgstr ""
+
+#: email-cart.php:1623
+#@ email-cart
+msgid "Just copy the link below and paste into any other place you like!"
+msgstr ""
+
+#: email-cart.php:291
+#@ email-cart
+msgid "Product Name"
+msgstr ""
+
+#: email-cart.php:293
+#@ email-cart
+msgid "Price"
+msgstr ""
+
+#: email-cart.php:447
+#@ email-cart
+msgid "Click here to view your cart."
+msgstr ""
+
+#: email-cart.php:612
+#@ email-cart
+msgid "WooCommerce"
+msgstr ""
+
+#: email-cart.php:652
+#, php-format
+#@ email-cart
+msgid "Please enter in decimal (%s) format without thousand separators."
+msgstr ""
+
+#: email-cart.php:653
+#, php-format
+#@ email-cart
+msgid "Please enter in monetary decimal (%s) format without thousand separators and currency symbols."
+msgstr ""
+
+#: email-cart.php:714
+#@ email-cart
+msgid "Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved."
+msgstr ""
+
+#: email-cart.php:715
+#@ email-cart
+msgid "Are you sure you want to revoke access to this download?"
+msgstr ""
+
+#: email-cart.php:1054
+#@ email-cart
+msgid "CC Email Address"
+msgstr ""
+
+#: email-cart.php:1055
+#@ email-cart
+msgid "Enter the email address you would like to CC on this cart email. (Separate multiple addresses with a comma)"
+msgstr ""
+
+#: email-cart.php:1069
+#@ email-cart
+msgid "BCC Email Address"
+msgstr ""
+
+#: email-cart.php:1070
+#@ email-cart
+msgid "Enter the email address you would like to BCC on this cart email. (Separate multiple addresses with a comma)"
+msgstr ""
+
+#: email-cart.php:1172
+#: settings/class-email-cart-settings.php:198
+#@ email-cart
+msgid "Show on Front-End Cart"
+msgstr ""
+
+#: email-cart.php:1174
+#: settings/class-email-cart-settings.php:200
+#@ email-cart
+msgid "Show a button to allow users to email their cart from the front-end cart page"
+msgstr ""
+
+#: email-cart.php:1188
+#: settings/class-email-cart-settings.php:214
+#@ email-cart
+msgid "Show CC Email Field "
+msgstr ""
+
+#: email-cart.php:1208
+#: settings/class-email-cart-settings.php:234
+#@ email-cart
+msgid "Display a field for users to add CC email addresses to the email"
+msgstr ""
+
+#: email-cart.php:1224
+#: settings/class-email-cart-settings.php:250
+#@ email-cart
+msgid "Show BCC Email Field"
+msgstr ""
+
+#: email-cart.php:1244
+#: settings/class-email-cart-settings.php:270
+#@ email-cart
+msgid "Display a field for users to add BCC email addresses to the email"
+msgstr ""
+
+#: email-cart.php:1260
+#: settings/class-email-cart-settings.php:286
+#@ email-cart
+msgid "Always Send a Copy"
+msgstr ""
+
+#: email-cart.php:1262
+#: settings/class-email-cart-settings.php:288
+#@ email-cart
+msgid "Add addresses that will receive a copy of the emailed cart on each send. Add multiple separated by comma"
+msgstr ""
+
+#: email-cart.php:488
+#@ email-cart
+msgid "the backend"
+msgstr ""
+
+#: email-cart.php:489
+#@ email-cart
+msgid "the cart page"
+msgstr ""
+
+#: email-cart.php:494
+#, php-format
+#@ email-cart
+msgid ""
+"\n"
+"The following email was sent using Email Cart for WooCommerce from %s of your site %s:\n"
+"<br>\n"
+msgstr ""
+
+#: email-cart.php:501
+#, php-format
+#@ email-cart
+msgid ""
+"\n"
+"To:\t\t%s\n"
+"<br>\n"
+msgstr ""
+
+#: email-cart.php:507
+#, php-format
+#@ email-cart
+msgid ""
+"\n"
+"From:\t%s\n"
+"<br>\n"
+msgstr ""
+
+#: email-cart.php:514
+#, php-format
+#@ email-cart
+msgid ""
+"\n"
+"Cc:\t\t%s\n"
+"<br>\n"
+msgstr ""
+
+#: email-cart.php:522
+#, php-format
+#@ email-cart
+msgid ""
+"\n"
+"Bcc:\t%s\n"
+"<br>\n"
+msgstr ""
+
+#: email-cart.php:529
+#@ email-cart
+msgid ""
+"\n"
+"<br>\n"
+"-----------------------------------------\n"
+"<br>\n"
+"<br>\n"
+msgstr ""
+
+#: email-cart.php:1164
+#@ email-cart
+msgid "Complete the following fields to setup your Email Cart"
+msgstr ""
+
+#: email-cart.php:1190
+#: email-cart.php:1228
+#: settings/class-email-cart-settings.php:216
+#: settings/class-email-cart-settings.php:254
+#@ email-cart
+msgid "Back-end"
+msgstr ""
+
+#: email-cart.php:1206
+#: email-cart.php:1242
+#: settings/class-email-cart-settings.php:232
+#: settings/class-email-cart-settings.php:268
+#@ email-cart
+msgid "Front-end"
+msgstr ""
+
+#: email-cart.php:1563
+#@ email-cart
+msgid "Email Address(es)"
+msgstr ""
+
+#: email-cart.php:1570
+#@ email-cart
+msgid "CC Email Address(es)"
+msgstr ""
+
+#: email-cart.php:1578
+#@ email-cart
+msgid "BCC Email Address(es)"
+msgstr ""
+
+#: email-cart.php:1586
+#@ email-cart
+msgid "Edit the email subject line above if you like"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:29
+#: settings/class-email-cart-settings.php:45
+#: settings/class-email-cart-settings.php:46
+#@ email-cart
+msgid "Email Cart Settings"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:79
+#@ email-cart
+msgid "Settings"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:96
+#@ email-cart
+msgid "Save changes"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:145
+#@ email-cart
+msgid "Default Backend Email Template"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:147
+#@ email-cart
+msgid "This is the default text to be editable in each Email Cart created on the backend."
+msgstr ""
+
+#: settings/class-email-cart-settings.php:147
+#: settings/class-email-cart-settings.php:182
+#@ email-cart
+msgid "Please do no remove any text containing [square brackets] as this will be populated with the cart information."
+msgstr ""
+
+#: settings/class-email-cart-settings.php:180
+#@ email-cart
+msgid "Default Frontend Email Template"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:182
+#@ email-cart
+msgid "This is the default text to be editable in each Email Cart on the Frontend Checkout page."
+msgstr ""
+
+#: settings/class-email-cart-settings.php:302
+#@ email-cart
+msgid "Send From"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:304
+#@ email-cart
+msgid "The Default From Address. Default is WooCommerce From Address"
+msgstr ""
+
+#: settings/class-email-cart-settings.php:337
+#@ email-cart
+msgid "Action failed. Please refresh the page and retry."
+msgstr ""
+
+#. translators: plugin header field 'Version'
+#: email-cart.php:0
+#@ email-cart
+msgid "1.11"
+msgstr ""
+
+#: email-cart.php:421
+#@ email-cart
+msgid "Cart Subtotal"
+msgstr ""
+
+#: email-cart.php:431
+#@ email-cart
+msgid "Order Total"
+msgstr ""
+

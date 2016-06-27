@@ -1,0 +1,60 @@
+[24-Mar-2016 17:04:56 UTC] PHP Fatal error:  Uncaught exception 'JSMin_UnterminatedStringException' with message 'Unterminated String: '"===a.STRING(4,5).toUpperCase()?r():!1):!1'' in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php:148
+Stack trace:
+#0 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(120): JSMin->action(1)
+#1 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(77): JSMin->min()
+#2 [internal function]: JSMin::minify('/*! jQuery v1.1...', Array)
+#3 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(452): call_user_func(Array, '/*! jQuery v1.1...', Array)
+#4 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(279): Minify::_combineMinify()
+#5 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/index.php(58): Minify::serve('MinApp', Array)
+#6 {main}
+  thrown in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php on line 148
+[24-Mar-2016 17:05:19 UTC] PHP Fatal error:  Uncaught exception 'JSMin_UnterminatedStringException' with message 'Unterminated String: '"===a.STRING(4,5).toUpperCase()?r():!1):!1'' in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php:148
+Stack trace:
+#0 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(120): JSMin->action(1)
+#1 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(77): JSMin->min()
+#2 [internal function]: JSMin::minify('/*! jQuery v1.1...', Array)
+#3 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(452): call_user_func(Array, '/*! jQuery v1.1...', Array)
+#4 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(279): Minify::_combineMinify()
+#5 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/index.php(58): Minify::serve('MinApp', Array)
+#6 {main}
+  thrown in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php on line 148
+[24-Mar-2016 17:05:48 UTC] PHP Fatal error:  Uncaught exception 'JSMin_UnterminatedStringException' with message 'Unterminated String: '"===a.STRING(4,5).toUpperCase()?r():!1):!1'' in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php:148
+Stack trace:
+#0 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(120): JSMin->action(1)
+#1 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(77): JSMin->min()
+#2 [internal function]: JSMin::minify('/*! jQuery v1.1...', Array)
+#3 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(452): call_user_func(Array, '/*! jQuery v1.1...', Array)
+#4 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(279): Minify::_combineMinify()
+#5 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/index.php(58): Minify::serve('MinApp', Array)
+#6 {main}
+  thrown in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php on line 148
+[24-Mar-2016 17:05:49 UTC] PHP Fatal error:  Uncaught exception 'JSMin_UnterminatedStringException' with message 'Unterminated String: '"===a.STRING(4,5).toUpperCase()?r():!1):!1'' in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php:148
+Stack trace:
+#0 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(120): JSMin->action(1)
+#1 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(77): JSMin->min()
+#2 [internal function]: JSMin::minify('/*! jQuery v1.1...', Array)
+#3 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(452): call_user_func(Array, '/*! jQuery v1.1...', Array)
+#4 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(279): Minify::_combineMinify()
+#5 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/index.php(58): Minify::serve('MinApp', Array)
+#6 {main}
+  thrown in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php on line 148
+[24-Mar-2016 17:06:22 UTC] PHP Fatal error:  Uncaught exception 'JSMin_UnterminatedStringException' with message 'Unterminated String: '"===a.STRING(4,5).toUpperCase()?r():!1):!1'' in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php:148
+Stack trace:
+#0 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(120): JSMin->action(1)
+#1 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(77): JSMin->min()
+#2 [internal function]: JSMin::minify('/*! jQuery v1.1...', Array)
+#3 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(452): call_user_func(Array, '/*! jQuery v1.1...', Array)
+#4 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(279): Minify::_combineMinify()
+#5 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/index.php(58): Minify::serve('MinApp', Array)
+#6 {main}
+  thrown in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php on line 148
+[24-Mar-2016 17:07:01 UTC] PHP Fatal error:  Uncaught exception 'JSMin_UnterminatedStringException' with message 'Unterminated String: '"===a.STRING(4,5).toUpperCase()?r():!1):!1'' in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php:148
+Stack trace:
+#0 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(120): JSMin->action(1)
+#1 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php(77): JSMin->min()
+#2 [internal function]: JSMin::minify('/*! jQuery v1.1...', Array)
+#3 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(452): call_user_func(Array, '/*! jQuery v1.1...', Array)
+#4 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/Minify.php(279): Minify::_combineMinify()
+#5 /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/index.php(58): Minify::serve('MinApp', Array)
+#6 {main}
+  thrown in /home/mhurrell81/public_html/wp-content/plugins/wp-minify/min/lib/JSMin.php on line 148

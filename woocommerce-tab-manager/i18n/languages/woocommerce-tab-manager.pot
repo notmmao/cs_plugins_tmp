@@ -1,0 +1,378 @@
+# Copyright (C) 2014 SkyVerge
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Tab Manager 1.1.3\n"
+"Report-Msgid-Bugs-To: https://support.woothemes.com/hc/\n"
+"POT-Creation-Date: 2014-06-15 22:41:30+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: admin/post-types/wc_product_tab.php:102
+msgid "Name"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:103
+msgid "Tab Type"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:104
+msgid "Parent Product"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:138
+msgid "Draft"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:152
+msgid "Restore this item from the Trash"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:152
+msgid "Restore"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:154
+msgid "Move this item to the Trash"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:154
+msgid "Trash"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:156
+msgid "Delete this item permanently"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:156
+#: admin/post-types/writepanels/writepanel-product-tab_actions.php:66
+msgid "Delete Permanently"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:177
+msgid "Product"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:179
+msgid "Global"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:190
+msgid "N/A"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:237
+msgid "Show all Tabs"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:238
+msgid "Show product tabs"
+msgstr ""
+
+#: admin/post-types/wc_product_tab.php:239
+msgid "Show global tabs"
+msgstr ""
+
+#: admin/post-types/writepanels/writepanel-product-tab_actions.php:58
+msgid "Save Tab"
+msgstr ""
+
+#: admin/post-types/writepanels/writepanel-product-tab_actions.php:58
+msgid "Save/update the tab"
+msgstr ""
+
+#: admin/post-types/writepanels/writepanel-product-tab_actions.php:68
+msgid "Move to Trash"
+msgstr ""
+
+#: admin/post-types/writepanels/writepanel-product_data-tabs.php:41
+#: admin/woocommerce-tab-manager-admin-global-layout.php:66
+#: admin/woocommerce-tab-manager-admin-init.php:211
+#: woocommerce-tab-manager.php:240
+msgid "Tabs"
+msgstr ""
+
+#: admin/post-types/writepanels/writepanels-init.php:97
+msgid "Tab Actions"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:101
+msgid "Override default tab layout:"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:103
+msgid "Close all"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:103
+msgid "Expand all"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:125
+msgid "Edit Global Tab Content"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:210
+#: admin/woocommerce-tab-manager-admin-init.php:99
+msgid "Remove"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:211
+#: admin/woocommerce-tab-manager-admin-init.php:100
+msgid "Click to toggle"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:221
+msgid "The title/content for this tab will be provided by a third party plugin"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:226
+#: admin/woocommerce-tab-manager-admin-init.php:101
+msgid "Title"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:231
+#: admin/woocommerce-tab-manager-admin-init.php:102
+msgid "The tab title, this appears in the tab"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:237
+msgid "Heading"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:238
+msgid "The tab heading, this appears just before the tab content"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:243
+#: admin/woocommerce-tab-manager-admin-init.php:103
+msgid "Content"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:268
+msgid "Add"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-functions.php:270
+msgid "Custom Tab"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-global-layout.php:67
+#: admin/woocommerce-tab-manager-admin-init.php:192
+msgid "Add Global Tab"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-global-layout.php:68
+#: admin/woocommerce-tab-manager-admin-global-layout.php:76
+#: admin/woocommerce-tab-manager-admin-init.php:213
+msgid "Default Tab Layout"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-global-layout.php:72
+msgid "Tabs layout %s"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-global-layout.php:90
+msgid "Save Changes"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:98
+msgid "Remove this product tab?"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:160
+#: admin/woocommerce-tab-manager-admin-init.php:163
+#: admin/woocommerce-tab-manager-admin-init.php:165
+msgid "Tab updated."
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:161
+msgid "Custom field updated."
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:162
+msgid "Custom field deleted."
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:164
+msgid "Tab restored to revision from %s"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:166
+msgid "Tab saved."
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:167
+msgid "Tab submitted."
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:168
+msgid "Tab scheduled for: <strong>%1$s</strong>."
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:169
+msgid "M j, Y @ G:i"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:170
+msgid "Tab draft updated."
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:200
+#: woocommerce-tab-manager.php:246
+msgid "Edit Tab"
+msgstr ""
+
+#: admin/woocommerce-tab-manager-admin-init.php:204
+msgid "Search results for &#8220;%s&#8221;"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce Tab Manager"
+msgstr ""
+
+#: lib/skyverge/woocommerce/class-sv-wc-admin-notice-handler.php:192
+msgid "Dismiss"
+msgstr ""
+
+#: lib/skyverge/woocommerce/class-sv-wc-plugin.php:297
+msgid ""
+"%s requires the %s PHP extension to function.  Contact your host or server "
+"administrator to configure and install the missing extension."
+msgid_plural ""
+"%s requires the following PHP extensions to function: %s.  Contact your "
+"host or server administrator to configure and install the missing "
+"extensions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/skyverge/woocommerce/class-sv-wc-plugin.php:317
+msgid ""
+"%s requires the %s PHP function to exist.  Contact your host or server "
+"administrator to configure and install the missing function."
+msgid_plural ""
+"%s requires the following PHP functions to exist: %s.  Contact your host or "
+"server administrator to configure and install the missing functions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/skyverge/woocommerce/class-sv-wc-plugin.php:352
+#: woocommerce-tab-manager.php:294
+msgid "Docs"
+msgstr ""
+
+#: lib/skyverge/woocommerce/class-sv-wc-plugin.php:356
+#: woocommerce-tab-manager.php:295
+msgid "Support"
+msgstr ""
+
+#: lib/skyverge/woocommerce/class-sv-wc-plugin.php:360
+#: woocommerce-tab-manager.php:296
+msgid "Write a Review"
+msgstr ""
+
+#: lib/skyverge/woocommerce/class-sv-wc-plugin.php:610
+#: woocommerce-tab-manager.php:293
+msgid "Configure"
+msgstr ""
+
+#: woocommerce-tab-manager.php:241
+msgid "Tab"
+msgstr ""
+
+#: woocommerce-tab-manager.php:243
+msgid "Add Tab"
+msgstr ""
+
+#: woocommerce-tab-manager.php:244
+msgid "Add New Tab"
+msgstr ""
+
+#: woocommerce-tab-manager.php:245
+msgid "Edit"
+msgstr ""
+
+#: woocommerce-tab-manager.php:247
+msgid "New Tab"
+msgstr ""
+
+#: woocommerce-tab-manager.php:248
+msgid "View Tabs"
+msgstr ""
+
+#: woocommerce-tab-manager.php:249
+msgid "View Tab"
+msgstr ""
+
+#: woocommerce-tab-manager.php:250
+msgid "Search Tabs"
+msgstr ""
+
+#: woocommerce-tab-manager.php:251
+msgid "No Tabs found"
+msgstr ""
+
+#: woocommerce-tab-manager.php:252
+msgid "No Tabs found in trash"
+msgstr ""
+
+#: woocommerce-tab-manager.php:254
+msgid "This is where you can add new tabs that you can add to products."
+msgstr ""
+
+#: woocommerce-tab-manager.php:542
+msgid "Description"
+msgstr ""
+
+#: woocommerce-tab-manager.php:542
+msgid "Displays the product content set in the main content editor."
+msgstr ""
+
+#: woocommerce-tab-manager.php:542
+msgid "Product Description"
+msgstr ""
+
+#: woocommerce-tab-manager.php:543
+msgid "Additional Information"
+msgstr ""
+
+#: woocommerce-tab-manager.php:543
+msgid ""
+"Displays the product attributes and properties configured in the Product "
+"Data panel."
+msgstr ""
+
+#: woocommerce-tab-manager.php:544
+msgid "Reviews (%d)"
+msgstr ""
+
+#: woocommerce-tab-manager.php:544
+msgid ""
+"Displays the product review form and any reviews.  Use %d in the Title to "
+"substitute the number of reviews for the product."
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.woothemes.com/products/woocommerce-tab-manager/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "A product tab manager for WooCommerce"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "SkyVerge"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.skyverge.com"
+msgstr ""
+
+#: woocommerce-tab-manager.php:242
+msgctxt "Admin menu name"
+msgid "Tab Manager"
+msgstr ""
