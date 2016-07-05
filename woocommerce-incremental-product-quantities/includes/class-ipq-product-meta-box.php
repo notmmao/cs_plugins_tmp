@@ -49,6 +49,8 @@ class IPQ_Quantity_Meta_Boxes {
 		
 		// Get applied rules by user role
 		$roles = $wp_roles->get_names();
+		$roles['guest'] = "Guest";
+		
 		$rules_by_role = array();
 		
 		// Loop through roles
@@ -173,7 +175,6 @@ class IPQ_Quantity_Meta_Boxes {
 		// Get the current values if they exist
 		$deactive  = get_post_meta( $post->ID, '_wpbo_deactive', true );
 		$step  = get_post_meta( $post->ID, '_wpbo_step',     true );
-		$fixed_step  = get_post_meta( $post->ID, '_wpbo_fixed_step',     true );
 		$min   = get_post_meta( $post->ID, '_wpbo_minimum',  true );
 		$max   = get_post_meta( $post->ID, '_wpbo_maximum',  true );
 		$over  = get_post_meta( $post->ID, '_wpbo_override', true );
@@ -192,16 +193,9 @@ class IPQ_Quantity_Meta_Boxes {
 			<span>Override Quantity Rules with Values Below</span>
 			
 			<span class='wpbo_product_values' <?php if ( $over != 'on' ) echo "style='display:none'"?>>
-				<div>
-					<label for="_wpbo_fixed_step">Fixed step values <br>
-						<small>(will override regular step)</small>
-					</label>
-					<input type="text" style="width:300px" name="_wpbo_fixed_step" value="<?php echo $fixed_step; ?>" />
-				</div>
-
 				<label for="_wpbo_step">Step Value</label>
 				<input type="number" name="_wpbo_step" value="<?php echo $step; ?>" />
-
+				
 				<label for="_wpbo_minimum">Minimum Quantity</label>
 				<input type="number" name="_wpbo_minimum" value="<?php echo $min; ?>" />
 				
@@ -278,10 +272,6 @@ class IPQ_Quantity_Meta_Boxes {
 		if ( isset( $_POST['_wpbo_step'] )) {
 			$step = $_POST['_wpbo_step'];
 		}
-
-		if ( isset( $_POST['_wpbo_fixed_step'] )) {
-			$fixed_step = $_POST['_wpbo_fixed_step'];
-		}
 		
 		/* Make sure min >= step */
 		/*
@@ -297,14 +287,6 @@ class IPQ_Quantity_Meta_Boxes {
 				$post_id, 
 				'_wpbo_step', 
 				strip_tags( wpbo_validate_number( $_POST['_wpbo_step'] ) )
-			);
-		}
-
-		if( isset( $_POST['_wpbo_fixed_step'] )) {
-			update_post_meta( 
-				$post_id, 
-				'_wpbo_fixed_step', 
-				strip_tags($_POST['_wpbo_fixed_step'])
 			);
 		}
 		

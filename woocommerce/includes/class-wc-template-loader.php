@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 /**
  * Template Loader
  *
@@ -11,7 +16,7 @@
 class WC_Template_Loader {
 
 	/**
-	 * Hook in methods
+	 * Hook in methods.
 	 */
 	public static function init() {
 		add_filter( 'template_include', array( __CLASS__, 'template_loader' ) );
@@ -23,11 +28,11 @@ class WC_Template_Loader {
 	 *
 	 * Handles template usage so that we can use our own templates instead of the themes.
 	 *
-	 * Templates are in the 'templates' folder. woocommerce looks for theme
-	 * overrides in /theme/woocommerce/ by default
+	 * Templates are in the 'templates' folder. woocommerce looks for theme.
+	 * overrides in /theme/woocommerce/ by default.
 	 *
-	 * For beginners, it also looks for a woocommerce.php template first. If the user adds
-	 * this to the theme (containing a woocommerce() inside) this will be used for all
+	 * For beginners, it also looks for a woocommerce.php template first. If the user adds.
+	 * this to the theme (containing a woocommerce() inside) this will be used for all.
 	 * woocommerce templates.
 	 *
 	 * @param mixed $template
@@ -36,6 +41,10 @@ class WC_Template_Loader {
 	public static function template_loader( $template ) {
 		$find = array( 'woocommerce.php' );
 		$file = '';
+
+		if ( is_embed() ) {
+			return $template;
+		}
 
 		if ( is_single() && get_post_type() == 'product' ) {
 
@@ -70,8 +79,7 @@ class WC_Template_Loader {
 
 		if ( $file ) {
 			$template       = locate_template( array_unique( $find ) );
-			$status_options = get_option( 'woocommerce_status_options', array() );
-			if ( ! $template || ( ! empty( $status_options['template_debug_mode'] ) && current_user_can( 'manage_options' ) ) ) {
+			if ( ! $template || WC_TEMPLATE_DEBUG_MODE ) {
 				$template = WC()->plugin_path() . '/templates/' . $file;
 			}
 		}
@@ -80,25 +88,33 @@ class WC_Template_Loader {
 	}
 
 	/**
-	 * comments_template_loader function.
+	 * Load comments template.
 	 *
 	 * @param mixed $template
 	 * @return string
 	 */
 	public static function comments_template_loader( $template ) {
-		if ( get_post_type() !== 'product' )
+		if ( get_post_type() !== 'product' ) {
 			return $template;
+		}
 
-		if ( file_exists( get_stylesheet_directory() . '/' . WC()->template_path() . 'single-product-reviews.php' ))
-			return get_stylesheet_directory() . '/' . WC()->template_path() . 'single-product-reviews.php';
-		elseif ( file_exists( get_template_directory() . '/' . WC()->template_path() . 'single-product-reviews.php' ))
-			return get_template_directory() . '/' . WC()->template_path() . 'single-product-reviews.php';
-		elseif ( file_exists( get_stylesheet_directory() . '/' . 'single-product-reviews.php' ))
-			return get_stylesheet_directory() . '/' . 'single-product-reviews.php';
-		elseif ( file_exists( get_template_directory() . '/' . 'single-product-reviews.php' ))
-			return get_template_directory() . '/' . 'single-product-reviews.php';
-		else
-			return WC()->plugin_path() . '/templates/single-product-reviews.php';
+		$check_dirs = array(
+			trailingslashit( get_stylesheet_directory() ) . WC()->template_path(),
+			trailingslashit( get_template_directory() ) . WC()->template_path(),
+			trailingslashit( get_stylesheet_directory() ),
+			trailingslashit( get_template_directory() ),
+			trailingslashit( WC()->plugin_path() ) . 'templates/'
+		);
+
+		if ( WC_TEMPLATE_DEBUG_MODE ) {
+			$check_dirs = array( array_pop( $check_dirs ) );
+		}
+
+		foreach ( $check_dirs as $dir ) {
+			if ( file_exists( trailingslashit( $dir ) . 'single-product-reviews.php' ) ) {
+				return trailingslashit( $dir ) . 'single-product-reviews.php';
+			}
+		}
 	}
 }
 

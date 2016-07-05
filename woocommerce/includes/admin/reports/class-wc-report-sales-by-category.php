@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 /**
  * WC_Report_Sales_By_Category
  *
@@ -9,23 +14,45 @@
  */
 class WC_Report_Sales_By_Category extends WC_Admin_Report {
 
-	public $chart_colours   = array();
-	public $show_categories = array();
+	/**
+	 * Chart colours.
+	 *
+	 * @var array
+	 */
+	public $chart_colours         = array();
 
 	/**
-	 * Constructor
+	 * Categories ids.
+	 *
+	 * @var array
+	 */
+	public $show_categories       = array();
+
+	/**
+	 * Item sales.
+	 *
+	 * @var array
+	 */
+	private $item_sales           = array();
+
+	/**
+	 * Item sales and times.
+	 *
+	 * @var array
+	 */
+	private $item_sales_and_times = array();
+
+	/**
+	 * Constructor.
 	 */
 	public function __construct() {
-
-		if ( isset( $_GET['show_categories'] ) && is_array( $_GET['show_categories'] ) ) {
-			$this->show_categories = array_map( 'absint', $_GET['show_categories'] );
-		} elseif ( isset( $_GET['show_categories'] ) ) {
-			$this->show_categories = array( absint( $_GET['show_categories'] ) );
+		if ( isset( $_GET['show_categories'] ) ) {
+			$this->show_categories = is_array( $_GET['show_categories'] ) ? array_map( 'absint', $_GET['show_categories'] ) : array( absint( $_GET['show_categories'] ) );
 		}
 	}
 
 	/**
-	 * Get all product ids in a category (and its children)
+	 * Get all product ids in a category (and its children).
 	 *
 	 * @param  int $category_id
 	 * @return array
@@ -39,13 +66,13 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the legend for the main chart sidebar
+	 * Get the legend for the main chart sidebar.
 	 *
 	 * @return array
 	 */
 	public function get_chart_legend() {
 
-		if ( ! $this->show_categories ) {
+		if ( empty( $this->show_categories ) ) {
 			return array();
 		}
 
@@ -78,7 +105,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output the report
+	 * Output the report.
 	 */
 	public function output_report() {
 
@@ -100,7 +127,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 		$this->calculate_current_range( $current_range );
 
 		// Get item sales data
-		if ( $this->show_categories ) {
+		if ( ! empty( $this->show_categories ) ) {
 			$order_items = $this->get_order_report_data( array(
 				'data' => array(
 					'_product_id' => array(
@@ -112,8 +139,8 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 					'_line_total' => array(
 						'type'            => 'order_item_meta',
 						'order_item_type' => 'line_item',
-						'function' => '',
-						'name'     => 'order_item_amount'
+						'function'        => 'SUM',
+						'name'            => 'order_item_amount'
 					),
 					'post_date' => array(
 						'type'     => 'post_data',
@@ -121,7 +148,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 						'name'     => 'post_date'
 					),
 				),
-				'group_by'     => 'ID, product_id',
+				'group_by'     => 'ID, product_id, post_date',
 				'query_type'   => 'get_results',
 				'filter_range' => true
 			) );
@@ -129,17 +156,16 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 			$this->item_sales           = array();
 			$this->item_sales_and_times = array();
 
-			if ( $order_items ) {
+			if ( is_array( $order_items ) ) {
 
 				foreach ( $order_items as $order_item ) {
 
 					switch ( $this->chart_groupby ) {
-
 						case 'day' :
 							$time = strtotime( date( 'Ymd', strtotime( $order_item->post_date ) ) ) * 1000;
 						break;
-
 						case 'month' :
+						default :
 							$time = strtotime( date( 'Ym', strtotime( $order_item->post_date ) ) . '01' ) * 1000;
 						break;
 					}
@@ -155,7 +181,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * [get_chart_widgets description]
+	 * Get chart widgets.
 	 *
 	 * @return array
 	 */
@@ -170,8 +196,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Category selection
-	 * @return void
+	 * Output category widget.
 	 */
 	public function category_widget() {
 
@@ -179,7 +204,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 		?>
 		<form method="GET">
 			<div>
-				<select multiple="multiple" data-placeholder="<?php _e( 'Select categories&hellip;', 'woocommerce' ); ?>" class="chosen_select" id="show_categories" name="show_categories[]" style="width: 205px;">
+				<select multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select categories&hellip;', 'woocommerce' ); ?>" class="wc-enhanced-select" id="show_categories" name="show_categories[]" style="width: 205px;">
 					<?php
 						$r = array();
 						$r['pad_counts'] 	= 1;
@@ -195,7 +220,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 				</select>
 				<a href="#" class="select_none"><?php _e( 'None', 'woocommerce' ); ?></a>
 				<a href="#" class="select_all"><?php _e( 'All', 'woocommerce' ); ?></a>
-				<input type="submit" class="submit button" value="<?php _e( 'Show', 'woocommerce' ); ?>" />
+				<input type="submit" class="submit button" value="<?php esc_attr_e( 'Show', 'woocommerce' ); ?>" />
 				<input type="hidden" name="range" value="<?php if ( ! empty( $_GET['range'] ) ) echo esc_attr( $_GET['range'] ) ?>" />
 				<input type="hidden" name="start_date" value="<?php if ( ! empty( $_GET['start_date'] ) ) echo esc_attr( $_GET['start_date'] ) ?>" />
 				<input type="hidden" name="end_date" value="<?php if ( ! empty( $_GET['end_date'] ) ) echo esc_attr( $_GET['end_date'] ) ?>" />
@@ -205,18 +230,16 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 			</div>
 			<script type="text/javascript">
 				jQuery(function(){
-					jQuery("select.chosen_select").chosen();
-
 					// Select all/none
 					jQuery( '.chart-widget' ).on( 'click', '.select_all', function() {
-						jQuery(this).closest( 'div' ).find( 'select option' ).attr( "selected", "selected" );
-						jQuery(this).closest( 'div' ).find('select').trigger( 'chosen:updated' );
+						jQuery(this).closest( 'div' ).find( 'select option' ).attr( 'selected', 'selected' );
+						jQuery(this).closest( 'div' ).find('select').change();
 						return false;
 					});
 
 					jQuery( '.chart-widget').on( 'click', '.select_none', function() {
-						jQuery(this).closest( 'div' ).find( 'select option' ).removeAttr( "selected" );
-						jQuery(this).closest( 'div' ).find('select').trigger( 'chosen:updated' );
+						jQuery(this).closest( 'div' ).find( 'select option' ).removeAttr( 'selected' );
+						jQuery(this).closest( 'div' ).find('select').change();
 						return false;
 					});
 				});
@@ -226,7 +249,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output an export link
+	 * Output an export link.
 	 */
 	public function get_export_button() {
 
@@ -237,7 +260,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 			download="report-<?php echo esc_attr( $current_range ); ?>-<?php echo date_i18n( 'Y-m-d', current_time('timestamp') ); ?>.csv"
 			class="export_csv"
 			data-export="chart"
-			data-xaxes="<?php _e( 'Date', 'woocommerce' ); ?>"
+			data-xaxes="<?php esc_attr_e( 'Date', 'woocommerce' ); ?>"
 			data-groupby="<?php echo $this->chart_groupby; ?>"
 		>
 			<?php _e( 'Export CSV', 'woocommerce' ); ?>
@@ -246,30 +269,27 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the main chart
+	 * Get the main chart.
 	 *
 	 * @return string
 	 */
 	public function get_main_chart() {
 		global $wp_locale;
 
-		if ( ! $this->show_categories ) {
+		if ( empty( $this->show_categories ) ) {
 			?>
 			<div class="chart-container">
 				<p class="chart-prompt"><?php _e( '&larr; Choose a category to view stats', 'woocommerce' ); ?></p>
 			</div>
 			<?php
 		} else {
-			$include_categories = array();
-			$chart_data         = array();
-			$chart_ticks        = array();
-			$index              = 0;
+			$chart_data = array();
+			$index      = 0;
 
 			foreach ( $this->show_categories as $category ) {
 
 				$category            = get_term( $category, 'product_cat' );
 				$product_ids         = $this->get_products_in_category( $category->term_id );
-				$category_total      = 0;
 				$category_chart_data = array();
 
 				for ( $i = 0; $i <= $this->chart_interval; $i ++ ) {
@@ -277,12 +297,11 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 					$interval_total = 0;
 
 					switch ( $this->chart_groupby ) {
-
 						case 'day' :
 							$time = strtotime( date( 'Ymd', strtotime( "+{$i} DAY", $this->start_date ) ) ) * 1000;
 						break;
-
 						case 'month' :
+						default :
 							$time = strtotime( date( 'Ym', strtotime( "+{$i} MONTH", $this->start_date ) ) . '01' ) * 1000;
 						break;
 					}
@@ -291,20 +310,16 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 
 						if ( isset( $this->item_sales_and_times[ $time ][ $id ] ) ) {
 							$interval_total += $this->item_sales_and_times[ $time ][ $id ];
-							$category_total += $this->item_sales_and_times[ $time ][ $id ];
 						}
 					}
 
-					$category_chart_data[] = array( $time, $interval_total );
+					$category_chart_data[] = array( $time, (float) wc_format_decimal( $interval_total, wc_get_price_decimals() ) );
 				}
-
-				//if ( ! $category_total )
-				//	continue;
 
 				$chart_data[ $category->term_id ]['category'] = $category->name;
 				$chart_data[ $category->term_id ]['data'] = $category_chart_data;
 
-				$index ++;
+				$index++;
 			}
 			?>
 			<div class="chart-container">
@@ -323,14 +338,23 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 									$width  = $this->barwidth / sizeof( $chart_data );
 									$offset = ( $width * $index );
 									$series = $data['data'];
-									foreach ( $series as $key => $series_data )
+									foreach ( $series as $key => $series_data ) {
 										$series[ $key ][0] = $series_data[0] + $offset;
+									}
 									echo '{
 										label: "' . esc_js( $data['category'] ) . '",
 										data: jQuery.parseJSON( "' . json_encode( $series ) . '" ),
 										color: "' . $color . '",
-										bars: { fillColor: "' . $color . '", fill: true, show: true, lineWidth: 1, align: "center", barWidth: ' . $width * 0.75 . ', stack: false },
-										prepend_tooltip: "' . get_woocommerce_currency_symbol() . '",
+										bars: {
+											fillColor: "' . $color . '",
+											fill: true,
+											show: true,
+											lineWidth: 1,
+											align: "center",
+											barWidth: ' . $width * 0.75 . ',
+											stack: false
+										},
+										' . $this->get_currency_tooltip() . ',
 										enable_tooltip: true,
 										prepend_label: true
 									},';

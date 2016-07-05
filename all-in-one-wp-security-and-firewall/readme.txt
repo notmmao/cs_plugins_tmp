@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com
 Tags: security, secure, Anti Virus, antivirus, ban, ban hacker, virus, firewall, firewall security, login, lockdown, htaccess, hack, malware, vulnerability, protect, protection, phishing, database, backup, plugin, sql injection, ssl, restrict, login captcha, bot, hotlink, 404 detection, admin, rename, all in one, scan, scanner, iframe,
 Requires at least: 3.5
 Tested up to: 4.5
-Stable tag: 4.0.8
+Stable tag: 4.1.2
 License: GPLv3
 
 A comprehensive, user-friendly, all in one WordPress security and firewall plugin for your site.
@@ -126,6 +126,7 @@ or malicious bots who do not have a special cookie in their browser. You (the si
 
 = Additional Features =
 * Ability to remove the WordPress Generator Meta information from the HTML source of your site.
+* Ability to remove the WordPress Version information from the JS and CSS file includes of your site.
 * Ability to prevent people from accessing the readme.html, license.txt and wp-config-sample.php files
 * Ability to temporarily lock down the front end of your site from general visitors while you do various backend tasks (investigate security attacks, perform site upgrades, do maintenance work etc.)
 * Ability to export/import the security settings.
@@ -181,6 +182,41 @@ https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin
 None
 
 == Changelog ==
+= 4.1.2 =
+- Fixed bug introduced by last file change scanner code changes.
+- Fixed bug in SPAM comment blocking functionality.
+- Fixed fatal error case when Divi theme and front end lockout is enabled.
+
+= 4.1.1 =
+- Fixed Fatal error conflict between Rename Login feature and Yoast SEO and some themes when attempting to access wp-admin page directly.
+- Added "Pending Approval" message when manual registration approval feature is enabled and a user registers.
+- Fix (minor): No need to use strcmp to compare integer values.
+- Updated and simplified wp-security-stop-users-enumeration.php for bug (thanks to @davidegiunchidiennea)
+- Minor code cleanup (Thanks to @chesio for the following changes).
+- File scanner codebase cleanup.
+- Fix: properly report invalid email addresses in file scanner configuration.
+- Code clean-up in AIOWPSecurity_Scan::do_file_change_scan() method.
+- Tweak: Compare file scan data faster.
+
+= 4.1.0 =
+- Fixed bug in Maintenance menu page when trying to attach a media file to the message text box.
+- Added a new filter (called "aiowps_ip_blocked_error_msg") which allows the modification of the error message displayed on the login page when an IP address has been blocked by the login lockdown feature.
+- Updated French language translation. Thanks to Claude Ribaux for providing the translation files.
+- Thanks to @chesio for making the following two changes.
+- Replaced deprecated call to get_currentuserinfo() function.
+- Minor code fixes in the backup class file.
+- Fix: display correct (error) message when write_to_htaccess() fails.
+- Tweak: database backup filename is more human-readable. 
+  Before: 24x7eg8l6i-database-backup-1463042767.zip
+  After: database-backup-20160512-104607-24x7eg8l6i.zip
+
+= 4.0.9 =
+- Made file change scanner code more robust for cases when open_basedir restriction is in effect. (Thanks to Manuel Jeanne for pointing this out).
+- Added code which will remove WordPress version info during CSS and JS script loading if you have the "Remove WP Generator Meta Info" option checked. (Thanks to aldemarcalazans for pointing this out).
+- Fixed some potential SQL injection vulnerabilities. (Thanks to Julio Potier for pointing these out).
+- Changed the feature category of blacklist manger from "Intermediate" to "Advanced".
+- Tweak: Remove "@" from list of characters blocked by advanced character string filter. (Because it is often used in retina-ready images).
+- Fix: Use home URL instead of site URL in lock notification email subject. Thanks to @chesio for fixing this.
 
 = 4.0.8 =
 - Added ability to identify IP addresses during user registration and option to block selected IPs.

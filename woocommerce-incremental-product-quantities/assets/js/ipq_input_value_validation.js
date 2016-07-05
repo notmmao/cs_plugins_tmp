@@ -1,7 +1,5 @@
 jQuery(document).ready( function($) {
 
-	// $('.cart').prepend('<div style="padding-bottom: 10px;" id="mod-price-container">Total price: <span id="mod-total-price"></span></div>');
-
 	/*
 	*	Quantity Rule Validation
 	*	
@@ -12,10 +10,7 @@ jQuery(document).ready( function($) {
 
 		// Get values from input box
 		var new_qty = $(this).val();
-
 		var step = $(this).attr( 'step' );
-		var fixed_step = $(this).attr( 'fixed_step' );
-
 		var max = $(this).attr( 'max' );
 		var min = $(this).attr( 'min' );
 		
@@ -23,11 +18,8 @@ jQuery(document).ready( function($) {
 		if ( min == '' || typeof min == 'undefined' ) 
 			min = 1;
 		
-		if ( step == '' || typeof step == 'undefined') {
-			if ( fixed_step == '' || typeof step == 'undefined') {
-				step = 1;
-			}
-		}
+		if ( step == '' || typeof step == 'undefined') 
+			step = 1;
 		
 		// Max Value Validation
 		if ( +new_qty > +max && max != '' ) {

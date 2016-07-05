@@ -1,6 +1,6 @@
 <?php
 /**
- * WC_Product_Cat_Dropdown_Walker class.
+ * WC_Product_Cat_Dropdown_Walker class
  *
  * @extends 	Walker
  * @class 		WC_Product_Cat_Dropdown_Walker
@@ -13,12 +13,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+if ( ! class_exists( 'WC_Product_Cat_Dropdown_Walker' ) ) :
+
 class WC_Product_Cat_Dropdown_Walker extends Walker {
 
-	var $tree_type = 'category';
-	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id', 'slug' => 'slug' );
+	/**
+	 * What the class handles.
+	 *
+	 * @var string
+	 */
+	public $tree_type = 'category';
 
 	/**
+	 * DB fields to use.
+	 *
+	 * @var array
+	 */
+	public $db_fields = array(
+		'parent' => 'parent',
+		'id'     => 'term_id',
+		'slug'   => 'slug'
+	);
+
+	/**
+	 * Starts the list before the elements are added.
+	 *
 	 * @see Walker::start_el()
 	 * @since 2.1.0
 	 *
@@ -44,7 +63,7 @@ class WC_Product_Cat_Dropdown_Walker extends Walker {
 
 		$output .= '>';
 
-		$output .= $pad . __( $cat_name, 'woocommerce' );
+		$output .= $pad . _x( $cat_name, 'product category name', 'woocommerce' );
 
 		if ( ! empty( $args['show_count'] ) )
 			$output .= '&nbsp;(' . $cat->count . ')';
@@ -56,8 +75,8 @@ class WC_Product_Cat_Dropdown_Walker extends Walker {
 	 * Traverse elements to create list from elements.
 	 *
 	 * Display one element if the element doesn't have any children otherwise,
-	 * display the element and its children. Will only traverse up to the max
-	 * depth and no ignore elements under that depth. It is possible to set the
+	 * display the element and its children. Will only traverse up to the max.
+	 * depth and no ignore elements under that depth. It is possible to set the.
 	 * max depth to include all depths, see walk() method.
 	 *
 	 * This method shouldn't be called directly, use the walk() method instead.
@@ -73,9 +92,11 @@ class WC_Product_Cat_Dropdown_Walker extends Walker {
 	 * @return null Null on failure with no changes to parameters.
 	 */
 	public function display_element( $element, &$children_elements, $max_depth, $depth = 0, $args, &$output ) {
-		if ( ! $element || 0 === $element->count ) {
+		if ( ! $element || ( 0 === $element->count && ! empty( $args[0]['hide_empty'] ) ) ) {
 			return;
 		}
 		parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 	}
 }
+
+endif;

@@ -66,35 +66,33 @@ class AIOWPSecurity_Utility_Htaccess
     }
 
 
+    /**
+     * Write all active rules to .htaccess file.
+     *
+     * @return boolean True on success, false on failure.
+     */
     static function write_to_htaccess()
     {
         global $aio_wp_security;
         //figure out what server is being used
         if (AIOWPSecurity_Utility::get_server_type() == -1) {
             $aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported!", 4);
-            return -1; //unable to write to the file
+            return false; //unable to write to the file
         }
 
         //clean up old rules first
         if (AIOWPSecurity_Utility_Htaccess::delete_from_htaccess() == -1) {
             $aio_wp_security->debug_logger->log_debug("Delete operation of .htaccess file failed!", 4);
-            return -1; //unable to write to the file
+            return false; //unable to write to the file
         }
 
         $htaccess = ABSPATH . '.htaccess';
-        //get the subdirectory if it is installed in one
-        $siteurl = explode('/', get_option('siteurl'));
-        if (isset($siteurl[3])) {
-            $dir = '/' . $siteurl[3] . '/';
-        } else {
-            $dir = '/';
-        }
 
         if (!$f = @fopen($htaccess, 'a+')) {
             @chmod($htaccess, 0644);
             if (!$f = @fopen($htaccess, 'a+')) {
                 $aio_wp_security->debug_logger->log_debug("chmod operation on .htaccess failed!", 4);
-                return -1;
+                return false;
             }
         }
         AIOWPSecurity_Utility_File::backup_and_rename_htaccess($htaccess); //TODO - we dont want to continually be backing up the htaccess file
@@ -102,10 +100,6 @@ class AIOWPSecurity_Utility_Htaccess
         $ht = explode(PHP_EOL, implode('', file($htaccess))); //parse each line of file into array
 
         $rules = AIOWPSecurity_Utility_Htaccess::getrules();
-        if ($rules == -1) {
-            $aio_wp_security->debug_logger->log_debug("Unable to retrieve rules in .htaccess file!", 4);
-            return -1;
-        }
 
         $rulesarray = explode(PHP_EOL, $rules);
         $rulesarray = apply_filters('aiowps_htaccess_rules_before_writing', $rulesarray);
@@ -113,7 +107,7 @@ class AIOWPSecurity_Utility_Htaccess
 
         if (!$f = @fopen($htaccess, 'w+')) {
             $aio_wp_security->debug_logger->log_debug("Write operation on .htaccess failed!", 4);
-            return -1; //we can't write to the file
+            return false; //we can't write to the file
         }
 
         $blank = false;
@@ -131,7 +125,7 @@ class AIOWPSecurity_Utility_Htaccess
             }
         }
         @fclose($f);
-        return 1; //success
+        return true; //success
     }
 
     /*
@@ -679,7 +673,10 @@ class AIOWPSecurity_Utility_Htaccess
     //Redirectmatch 403 convert(
     //RedirectMatch 403 .inc
     //RedirectMatch 403 include.
-
+    //
+    // The "@" sign is often used in filenames of retina-ready images like
+    // "logo@2x.jpg", therefore it has been removed from the list.
+    //RedirectMatch 403 \@
 
     static function getrules_advanced_character_string_filter()
     {
@@ -693,7 +690,6 @@ class AIOWPSecurity_Utility_Htaccess
                         RedirectMatch 403 \:
                         RedirectMatch 403 \;
                         RedirectMatch 403 \=
-                        RedirectMatch 403 \@
                         RedirectMatch 403 \[
                         RedirectMatch 403 \]
                         RedirectMatch 403 \^

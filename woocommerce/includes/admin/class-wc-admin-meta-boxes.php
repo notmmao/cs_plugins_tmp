@@ -2,11 +2,11 @@
 /**
  * WooCommerce Meta Boxes
  *
- * Sets up the write panels used by products and orders (custom post types)
+ * Sets up the write panels used by products and orders (custom post types).
  *
- * @author 		WooThemes
- * @category 	Admin
- * @package 	WooCommerce/Admin/Meta Boxes
+ * @author      WooThemes
+ * @category    Admin
+ * @package     WooCommerce/Admin/Meta Boxes
  * @version     2.1.0
  */
 
@@ -15,31 +15,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WC_Admin_Meta_Boxes
+ * WC_Admin_Meta_Boxes.
  */
 class WC_Admin_Meta_Boxes {
 
-	private static $meta_box_errors = array();
+	/**
+	 * Is meta boxes saved once?
+	 *
+	 * @var boolean
+	 */
+	private static $saved_meta_boxes = false;
 
 	/**
-	 * Constructor
+	 * Meta box error messages.
+	 *
+	 * @var array
+	 */
+	public static $meta_box_errors  = array();
+
+	/**
+	 * Constructor.
 	 */
 	public function __construct() {
 		add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ), 10 );
 		add_action( 'add_meta_boxes', array( $this, 'rename_meta_boxes' ), 20 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 30 );
-		add_action( 'add_meta_boxes', array( 'WC_Gateway_Mijireh', 'add_page_slurp_meta' ) );
 		add_action( 'save_post', array( $this, 'save_meta_boxes' ), 1, 2 );
 
 		/**
-		 * Save Order Meta Boxes
+		 * Save Order Meta Boxes.
 		 *
 		 * In order:
-		 * 		Save the order items
-		 * 		Save the order totals
-		 * 		Save the order downloads
-		 * 		Save order data - also updates status and sends out admin emails if needed. Last to show latest data.
-		 * 		Save actions - sends out other emails. Last to show latest data.
+		 *      Save the order items.
+		 *      Save the order totals.
+		 *      Save the order downloads.
+		 *      Save order data - also updates status and sends out admin emails if needed. Last to show latest data.
+		 *      Save actions - sends out other emails. Last to show latest data.
 		 */
 		add_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Items::save', 10, 2 );
 		add_action( 'woocommerce_process_shop_order_meta', 'WC_Meta_Box_Order_Downloads::save', 30, 2 );
@@ -53,16 +64,13 @@ class WC_Admin_Meta_Boxes {
 		// Save Coupon Meta Boxes
 		add_action( 'woocommerce_process_shop_coupon_meta', 'WC_Meta_Box_Coupon_Data::save', 10, 2 );
 
-		// Save Rating Meta Boxes
-		add_action( 'comment_edit_redirect',  'WC_Meta_Box_Order_Reviews::save', 1, 2 );
-
 		// Error handling (for showing errors from meta boxes on next page load)
 		add_action( 'admin_notices', array( $this, 'output_errors' ) );
 		add_action( 'shutdown', array( $this, 'save_errors' ) );
 	}
 
 	/**
-	 * Add an error message
+	 * Add an error message.
 	 * @param string $text
 	 */
 	public static function add_error( $text ) {
@@ -70,7 +78,7 @@ class WC_Admin_Meta_Boxes {
 	}
 
 	/**
-	 * Save errors to an option
+	 * Save errors to an option.
 	 */
 	public function save_errors() {
 		update_option( 'woocommerce_meta_box_errors', self::$meta_box_errors );
@@ -84,10 +92,12 @@ class WC_Admin_Meta_Boxes {
 
 		if ( ! empty( $errors ) ) {
 
-			echo '<div id="woocommerce_errors" class="error fade">';
+			echo '<div id="woocommerce_errors" class="error notice is-dismissible">';
+
 			foreach ( $errors as $error ) {
-				echo '<p>' . esc_html( $error ) . '</p>';
+				echo '<p>' . wp_kses_post( $error ) . '</p>';
 			}
+
 			echo '</div>';
 
 			// Clear
@@ -96,57 +106,53 @@ class WC_Admin_Meta_Boxes {
 	}
 
 	/**
-	 * Add WC Meta boxes
+	 * Add WC Meta boxes.
 	 */
 	public function add_meta_boxes() {
 		// Products
 		add_meta_box( 'postexcerpt', __( 'Product Short Description', 'woocommerce' ), 'WC_Meta_Box_Product_Short_Description::output', 'product', 'normal' );
 		add_meta_box( 'woocommerce-product-data', __( 'Product Data', 'woocommerce' ), 'WC_Meta_Box_Product_Data::output', 'product', 'normal', 'high' );
-		add_meta_box( 'woocommerce-product-images', __( 'Product Gallery', 'woocommerce' ), 'WC_Meta_Box_Product_Images::output', 'product', 'side' );
+		add_meta_box( 'woocommerce-product-images', __( 'Product Gallery', 'woocommerce' ), 'WC_Meta_Box_Product_Images::output', 'product', 'side', 'low' );
 
 		// Orders
 		foreach ( wc_get_order_types( 'order-meta-boxes' ) as $type ) {
-			add_meta_box( 'woocommerce-order-data', __( 'Order Data', 'woocommerce' ), 'WC_Meta_Box_Order_Data::output', $type, 'normal', 'high' );
-			add_meta_box( 'woocommerce-order-items', __( 'Order Items', 'woocommerce' ), 'WC_Meta_Box_Order_Items::output', $type, 'normal', 'high' );
-			add_meta_box( 'woocommerce-order-notes', __( 'Order Notes', 'woocommerce' ), 'WC_Meta_Box_Order_Notes::output', $type, 'side', 'default' );
-			add_meta_box( 'woocommerce-order-downloads', __( 'Downloadable Product Permissions', 'woocommerce' ) . ' <span class="tips" data-tip="' . __( 'Note: Permissions for order items will automatically be granted when the order status changes to processing/completed.', 'woocommerce' ) . '">[?]</span>', 'WC_Meta_Box_Order_Downloads::output', $type, 'normal', 'default' );
-			add_meta_box( 'woocommerce-order-actions', __( 'Order Actions', 'woocommerce' ), 'WC_Meta_Box_Order_Actions::output', $type, 'side', 'high' );
+			$order_type_object = get_post_type_object( $type );
+			add_meta_box( 'woocommerce-order-data', sprintf( __( '%s Data', 'woocommerce' ), $order_type_object->labels->singular_name ), 'WC_Meta_Box_Order_Data::output', $type, 'normal', 'high' );
+			add_meta_box( 'woocommerce-order-items', __( 'Items', 'woocommerce' ), 'WC_Meta_Box_Order_Items::output', $type, 'normal', 'high' );
+			add_meta_box( 'woocommerce-order-notes', sprintf( __( '%s Notes', 'woocommerce' ), $order_type_object->labels->singular_name ), 'WC_Meta_Box_Order_Notes::output', $type, 'side', 'default' );
+			add_meta_box( 'woocommerce-order-downloads', __( 'Downloadable Product Permissions', 'woocommerce' ) . wc_help_tip( __( 'Note: Permissions for order items will automatically be granted when the order status changes to processing/completed.', 'woocommerce' ) ), 'WC_Meta_Box_Order_Downloads::output', $type, 'normal', 'default' );
+			add_meta_box( 'woocommerce-order-actions', sprintf( __( '%s Actions', 'woocommerce' ), $order_type_object->labels->singular_name ), 'WC_Meta_Box_Order_Actions::output', $type, 'side', 'high' );
 		}
 
 		// Coupons
 		add_meta_box( 'woocommerce-coupon-data', __( 'Coupon Data', 'woocommerce' ), 'WC_Meta_Box_Coupon_Data::output', 'shop_coupon', 'normal', 'high' );
-
-		// Reviews
-		if ( 'comment' == get_current_screen()->id && isset( $_GET['c'] ) ) {
-			if ( get_comment_meta( intval( $_GET['c'] ), 'rating', true ) ) {
-				add_meta_box( 'woocommerce-rating', __( 'Rating', 'woocommerce' ), 'WC_Meta_Box_Order_Reviews::output', 'comment', 'normal', 'high' );
-			}
-		}
 	}
 
 	/**
-	 * Remove bloat
+	 * Remove bloat.
 	 */
 	public function remove_meta_boxes() {
 		remove_meta_box( 'postexcerpt', 'product', 'normal' );
 		remove_meta_box( 'product_shipping_classdiv', 'product', 'side' );
 		remove_meta_box( 'pageparentdiv', 'product', 'side' );
-		remove_meta_box( 'commentstatusdiv', 'product', 'normal' );
+		remove_meta_box( 'commentsdiv', 'product', 'normal' );
 		remove_meta_box( 'commentstatusdiv', 'product', 'side' );
-		remove_meta_box( 'woothemes-settings', 'shop_coupon' , 'normal' );
-		remove_meta_box( 'commentstatusdiv', 'shop_coupon' , 'normal' );
-		remove_meta_box( 'slugdiv', 'shop_coupon' , 'normal' );
+		remove_meta_box( 'commentstatusdiv', 'product', 'normal' );
+		remove_meta_box( 'woothemes-settings', 'shop_coupon', 'normal' );
+		remove_meta_box( 'commentstatusdiv', 'shop_coupon', 'normal' );
+		remove_meta_box( 'slugdiv', 'shop_coupon', 'normal' );
 
 		foreach ( wc_get_order_types( 'order-meta-boxes' ) as $type ) {
 			remove_meta_box( 'commentsdiv', $type, 'normal' );
 			remove_meta_box( 'woothemes-settings', $type, 'normal' );
 			remove_meta_box( 'commentstatusdiv', $type, 'normal' );
 			remove_meta_box( 'slugdiv', $type, 'normal' );
+			remove_meta_box( 'submitdiv', $type, 'side' );
 		}
 	}
 
 	/**
-	 * Rename core meta boxes
+	 * Rename core meta boxes.
 	 */
 	public function rename_meta_boxes() {
 		global $post;
@@ -160,14 +166,14 @@ class WC_Admin_Meta_Boxes {
 	}
 
 	/**
-	 * Check if we're saving, the trigger an action based on the post type
+	 * Check if we're saving, the trigger an action based on the post type.
 	 *
 	 * @param  int $post_id
 	 * @param  object $post
 	 */
 	public function save_meta_boxes( $post_id, $post ) {
 		// $post_id and $post are required
-		if ( empty( $post_id ) || empty( $post ) ) {
+		if ( empty( $post_id ) || empty( $post ) || self::$saved_meta_boxes ) {
 			return;
 		}
 
@@ -190,6 +196,12 @@ class WC_Admin_Meta_Boxes {
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
+
+		// We need this save event to run once to avoid potential endless loops. This would have been perfect:
+		//	remove_action( current_filter(), __METHOD__ );
+		// But cannot be used due to https://github.com/woothemes/woocommerce/issues/6485
+		// When that is patched in core we can use the above. For now:
+		self::$saved_meta_boxes = true;
 
 		// Check the post type
 		if ( in_array( $post->post_type, wc_get_order_types( 'order-meta-boxes' ) ) ) {

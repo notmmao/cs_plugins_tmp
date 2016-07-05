@@ -57,7 +57,7 @@ function woocommerce_create_page( $slug, $option = '', $page_title = '', $page_c
  */
 function woocommerce_readfile_chunked( $file, $retbytes = true ) {
 	_deprecated_function( 'woocommerce_readfile_chunked', '2.1', 'WC_Download_Handler::readfile_chunked()' );
-	return WC_Download_Handler::readfile_chunked( $file, $retbytes );
+	return WC_Download_Handler::readfile_chunked( $file );
 }
 
 /**
@@ -70,7 +70,7 @@ function woocommerce_readfile_chunked( $file, $retbytes = true ) {
  */
 function woocommerce_format_total( $number ) {
 	_deprecated_function( __FUNCTION__, '2.1', 'wc_format_decimal()' );
-	return wc_format_decimal( $number, get_option( 'woocommerce_price_num_decimals' ), false );
+	return wc_format_decimal( $number, wc_get_price_decimals(), false );
 }
 
 /**
@@ -90,7 +90,6 @@ function woocommerce_get_formatted_product_name( $product ) {
  * Handle IPN requests for the legacy paypal gateway by calling gateways manually if needed.
  *
  * @access public
- * @return void
  */
 function woocommerce_legacy_paypal_ipn() {
 	if ( ! empty( $_GET['paypalListener'] ) && $_GET['paypalListener'] == 'paypal_standard_IPN' ) {
@@ -103,7 +102,7 @@ function woocommerce_legacy_paypal_ipn() {
 add_action( 'init', 'woocommerce_legacy_paypal_ipn' );
 
 /**
- * get_product soft deprecated for wc_get_product
+ * get_product soft deprecated for wc_get_product.
  *
  * @deprecated
  */
@@ -112,7 +111,7 @@ function get_product( $the_product = false, $args = array() ) {
 }
 
 /**
- * Cart functions (soft deprecated)
+ * Cart functions (soft deprecated).
  */
 /**
  * @deprecated
@@ -182,7 +181,7 @@ function woocommerce_cart_totals_shipping_method_label( $method ) {
 }
 
 /**
- * Core functions (soft deprecated)
+ * Core functions (soft deprecated).
  */
 /**
  * @deprecated
@@ -210,7 +209,7 @@ function woocommerce_mail( $to, $subject, $message, $headers = "Content-Type: te
 }
 
 /**
- * Customer functions (soft deprecated)
+ * Customer functions (soft deprecated).
  */
 /**
  * @deprecated
@@ -256,7 +255,7 @@ function woocommerce_customer_has_capability( $allcaps, $caps, $args ) {
 }
 
 /**
- * Formatting functions (soft deprecated)
+ * Formatting functions (soft deprecated).
  */
 /**
  * @deprecated
@@ -388,7 +387,7 @@ if ( ! function_exists( 'woocommerce_format_hex' ) ) {
 }
 
 /**
- * Order functions (soft deprecated)
+ * Order functions (soft deprecated).
  */
 /**
  * @deprecated
@@ -458,7 +457,7 @@ function woocommerce_processing_order_count() {
 }
 
 /**
- * Page functions (soft deprecated)
+ * Page functions (soft deprecated).
  */
 /**
  * @deprecated
@@ -488,13 +487,13 @@ function woocommerce_customer_edit_account_url() {
  * @deprecated
  */
 function woocommerce_nav_menu_items( $items, $args ) {
-	return wc_nav_menu_items( $items, $args );
+	return wc_nav_menu_items( $items );
 }
 /**
  * @deprecated
  */
 function woocommerce_nav_menu_item_classes( $menu_items, $args ) {
-	return wc_nav_menu_item_classes( $menu_items, $args );
+	return wc_nav_menu_item_classes( $menu_items );
 }
 /**
  * @deprecated
@@ -504,35 +503,32 @@ function woocommerce_list_pages( $pages ) {
 }
 
 /**
- * Handle renamed filters
+ * Handle renamed filters.
  */
 global $wc_map_deprecated_filters;
 
 $wc_map_deprecated_filters = array(
-	'woocommerce_cart_item_class'       => 'woocommerce_cart_table_item_class',
-	'woocommerce_cart_item_product_id'  => 'hook_woocommerce_in_cart_product_id',
-	'woocommerce_cart_item_thumbnail'   => 'hook_woocommerce_in_cart_product_thumbnail',
-	'woocommerce_cart_item_price'       => 'woocommerce_cart_item_price_html',
-	'woocommerce_cart_item_name'        => 'woocommerce_in_cart_product_title',
-	'woocommerce_order_item_class'      => 'woocommerce_order_table_item_class',
-	'woocommerce_order_item_name'       => 'woocommerce_order_table_product_title',
-	'woocommerce_order_amount_shipping' => 'woocommerce_order_amount_total_shipping',
-	'woocommerce_package_rates'         => 'woocommerce_available_shipping_methods'
+	'woocommerce_add_to_cart_fragments' => 'add_to_cart_fragments',
+	'woocommerce_add_to_cart_redirect'  => 'add_to_cart_redirect'
 );
 
-foreach ( $wc_map_deprecated_filters as $new => $old )
+foreach ( $wc_map_deprecated_filters as $new => $old ) {
 	add_filter( $new, 'woocommerce_deprecated_filter_mapping' );
+}
 
 function woocommerce_deprecated_filter_mapping( $data, $arg_1 = '', $arg_2 = '', $arg_3 = '' ) {
 	global $wc_map_deprecated_filters;
 
 	$filter = current_filter();
 
-	if ( isset( $wc_map_deprecated_filters[ $filter ] ) )
+	if ( isset( $wc_map_deprecated_filters[ $filter ] ) ) {
 		if ( has_filter( $wc_map_deprecated_filters[ $filter ] ) ) {
 			$data = apply_filters( $wc_map_deprecated_filters[ $filter ], $data, $arg_1, $arg_2, $arg_3 );
-			_deprecated_function( 'The ' . $wc_map_deprecated_filters[ $filter ] . ' filter', '2.1', $filter );
+			if ( ! is_ajax() ) {
+				_deprecated_function( 'The ' . $wc_map_deprecated_filters[ $filter ] . ' filter', '', $filter );
+			}
 		}
+	}
 
 	return $data;
 }
@@ -542,7 +538,7 @@ function woocommerce_deprecated_filter_mapping( $data, $arg_1 = '', $arg_2 = '',
  */
 
 /**
- * Attribute functions - soft deprecated
+ * Attribute functions - soft deprecated.
  */
 /**
  * @deprecated
@@ -559,9 +555,11 @@ function woocommerce_walk_category_dropdown_tree( $a1 = '', $a2 = '', $a3 = '' )
 /**
  * @deprecated
  */
-function woocommerce_taxonomy_metadata_wpdbfix() {
-	return wc_taxonomy_metadata_wpdbfix();
-}
+function woocommerce_taxonomy_metadata_wpdbfix() {}
+/**
+ * @deprecated
+ */
+function wc_taxonomy_metadata_wpdbfix() {}
 /**
  * @deprecated
  */
@@ -596,11 +594,11 @@ function woocommerce_recount_after_stock_change( $product_id ) {
  * @deprecated
  */
 function woocommerce_change_term_counts( $terms, $taxonomies, $args ) {
-	return wc_change_term_counts( $terms, $taxonomies, $args );
+	return wc_change_term_counts( $terms, $taxonomies );
 }
 
 /**
- * Product functions - soft deprecated
+ * Product functions - soft deprecated.
  */
 /**
  * @deprecated
@@ -670,11 +668,10 @@ function woocommerce_track_product_view() {
 }
 
 /**
- * Shop order status
+ * Shop order status.
  *
  * @since 2.2
  * @param WP_Query $q
- * @return void
  */
 function wc_shop_order_status_backwards_compatibility( $q ) {
 	if ( $q->is_main_query() ) {
@@ -708,13 +705,36 @@ function wc_shop_order_status_backwards_compatibility( $q ) {
 			$q->set( 'post_status', $order_status );
 			$q->set( 'tax_query', $tax_query );
 
-			_doing_it_wrong( 'WP_Query', sprintf( __( 'The shop_order_status taxonomy is no more in WooCommerce 2.2! You should use the new WooCommerce post_status instead, <a href="%s">read more...</a>', 'woocommerce' ), 'http://develop.woothemes.com/woocommerce/2014/08/wc-2-2-order-statuses-plugin-compatibility/' ), 'WooCommerce 2.2' );
+			_doing_it_wrong( 'WP_Query', sprintf( __( 'The shop_order_status taxonomy is no more in WooCommerce 2.2! You should use the new WooCommerce post_status instead, <a href="%s">read more...</a>', 'woocommerce' ), 'https://woocommerce.wordpress.com/2014/08/wc-2-2-order-statuses-plugin-compatibility/' ), 'WooCommerce 2.2' );
 		} else {
 			$q->set( 'post_status', array_keys( wc_get_order_statuses() ) );
 
-			_doing_it_wrong( 'WP_Query', sprintf( __( 'The "publish" order status is no more in WooCommerce 2.2! You should use the new WooCommerce post_status instead, <a href="%s">read more...</a>', 'woocommerce' ), 'http://develop.woothemes.com/woocommerce/2014/08/wc-2-2-order-statuses-plugin-compatibility/' ), 'WooCommerce 2.2' );
+			_doing_it_wrong( 'WP_Query', sprintf( __( 'The "publish" order status is no more in WooCommerce 2.2! You should use the new WooCommerce post_status instead, <a href="%s">read more...</a>', 'woocommerce' ), 'https://woocommerce.wordpress.com/2014/08/wc-2-2-order-statuses-plugin-compatibility/' ), 'WooCommerce 2.2' );
 		}
 	}
 }
 
 add_action( 'pre_get_posts', 'wc_shop_order_status_backwards_compatibility' );
+
+/**
+ * @since 2.3
+ * @deprecated has no replacement
+ */
+function woocommerce_compile_less_styles() {
+	_deprecated_function( 'woocommerce_compile_less_styles', '2.3' );
+}
+
+/**
+ * woocommerce_calc_shipping was an option used to determine if shipping was enabled prior to version 2.6.0. This has since been replaced with wc_shipping_enabled() function and
+ * the woocommerce_ship_to_countries setting.
+ * @since 2.6.0
+ * @return string
+ */
+function woocommerce_calc_shipping_backwards_compatibility( $value ) {
+	if ( defined( 'WC_UPDATING' ) ) {
+		return $value;
+	}
+	return 'disabled' === get_option( 'woocommerce_ship_to_countries' ) ? 'no' : 'yes';
+}
+
+add_filter( 'pre_option_woocommerce_calc_shipping', 'woocommerce_calc_shipping_backwards_compatibility' );

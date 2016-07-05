@@ -4,12 +4,12 @@ Plugin Name: Order Delivery Date for WooCommerce (Lite version)
 Plugin URI: http://www.tychesoftwares.com/store/free-plugin/order-delivery-date-on-checkout/
 Description: This plugin allows customers to choose their preferred Order Delivery Date during checkout.
 Author: Tyche Softwares
-Version: 2.3
+Version: 2.4
 Author URI: http://www.tychesoftwares.com/about
 Contributor: Tyche Softwares, http://www.tychesoftwares.com/
 */
 
-$wpefield_version = '2.3';
+$wpefield_version = '2.4';
 
 include_once( 'integration.php' );
 include_once( 'orddd-lite-config.php' );
@@ -43,10 +43,8 @@ function orddd_lite_deactivate() {
     delete_option( 'orddd_lite_calendar_theme' );
     delete_option( 'orddd_lite_calendar_theme_name' );
     delete_option( 'orddd_lite_language_selected' );
-    delete_option( 'orddd_lite_date_in_shipping' );
-    delete_option( 'orddd_lite_default_appearance_settings' );
-    
-    delete_option( 'orddd_timestamp_update_script' );
+    delete_option( 'orddd_lite_delivery_date_fields_on_checkout_page' );
+    delete_option( 'orddd_lite_default_appearance_settings' );    
 }
 
 if ( !class_exists( 'order_delivery_date_lite' ) ) {
@@ -80,7 +78,7 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
             add_filter( 'manage_edit-shop_order_sortable_columns', array( 'orddd_lite_filter', 'orddd_lite_woocommerce_custom_column_value_sort' ) );
             add_filter( 'request', array( 'orddd_lite_filter', 'orddd_lite_woocommerce_delivery_date_orderby' ) );
             
-            add_action( ORDDD_SHOPPING_CART_HOOK, array( &$this, 'orddd_lite_my_custom_checkout_field' ) );
+            add_action( ORDDD_LITE_SHOPPING_CART_HOOK, array( &$this, 'orddd_lite_my_custom_checkout_field' ) );
             add_action( 'woocommerce_checkout_update_order_meta', array( &$this, 'orddd_lite_my_custom_checkout_field_update_order_meta' ) );
            
             if ( defined( 'WOOCOMMERCE_VERSION' ) && version_compare( WOOCOMMERCE_VERSION, "2.3", '>=' ) < 0 ) {
@@ -119,7 +117,7 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
             add_option( 'orddd_lite_calendar_theme', ORDDD_LITE_CALENDAR_THEME );
             add_option( 'orddd_lite_calendar_theme_name', ORDDD_LITE_CALENDAR_THEME_NAME );
             add_option( 'orddd_lite_language_selected', 'en-GB' );
-            add_option( 'orddd_lite_date_in_shipping', '' );
+            add_option( 'orddd_lite_delivery_date_fields_on_checkout_page', 'billing_section' );
         }
 
         /***********************************************************
@@ -142,7 +140,7 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
         function orddd_lite_update_db_check() {
             global $orddd_lite_plugin_version, $wpefield_version;
             $orddd_lite_plugin_version = $wpefield_version;
-            if ( $orddd_lite_plugin_version == "2.3" ) {
+            if ( $orddd_lite_plugin_version == "2.4" ) {
                 order_delivery_date_lite::orddd_lite_update_install();
             }
         }
@@ -153,7 +151,7 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
             //code to set the option to on as default
             $orddd_lite_plugin_version = get_option( 'orddd_lite_db_version' );
             if ( $orddd_lite_plugin_version != order_delivery_date_lite::get_orddd_lite_version() ) {
-                update_option( 'orddd_lite_db_version','2.3' );
+                update_option( 'orddd_lite_db_version','2.4' );
                 if ( get_option( 'orddd_lite_update_value' ) != 'yes' ) {
                     $i = 0;
                     foreach ( $orddd_lite_weekdays as $n => $day_name ) {
@@ -210,6 +208,16 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
                     update_option( 'orddd_lite_date_in_shipping', '' );
                     update_option( 'orddd_lite_default_appearance_settings', 'yes' );
                 }
+                if ( get_option( "orddd_lite_delivery_date_on_checkout_page_enabled" ) != 'yes' ) {
+                    if ( get_option( "orddd_lite_date_in_shipping" ) == 'on' ) {
+                        update_option( "orddd_lite_delivery_date_fields_on_checkout_page", "shipping_section" );
+                        delete_option( "orddd_lite_date_in_shipping" );                       
+                    } else {
+                        update_option( "orddd_lite_delivery_date_fields_on_checkout_page", "billing_section" );
+                        delete_option( "orddd_lite_date_in_shipping" );
+                    }
+                    update_option( "orddd_lite_delivery_date_on_checkout_page_enabled", 'yes' );
+                }
             }
         }
         
@@ -249,7 +257,6 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
         function order_lite_coupon_notice() {
             $admin_url = get_admin_url();
             echo '<input type="hidden" id="admin_url" value="' . $admin_url . '"/>';
-            
             $admin_notice = get_option( 'orddd_admin_notices' );
             if( $admin_notice != 'yes' ) {
                 ?>  
@@ -257,81 +264,50 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
                     <p><?php _e( 'You can upgrade to the <a href="https://www.tychesoftwares.com/store/premium-plugins/order-delivery-date-for-woocommerce-pro-21/">PRO version of Order Delivery Date for WooCommerce plugin</a> at a <b>20% discount</b>. Use the coupon code: <b>ORDPRO20</b>.<a href="https://www.tychesoftwares.com/store/premium-plugins/order-delivery-date-for-woocommerce-pro-21/"> Purchase now </a> & save $20!', 'order-delivery-date' ); ?></p>
                 </div>   
                 <?php
+                update_option( 'orddd_update_admin_notice', 'yes' );
             }
-            if( isset( $_GET['page'] ) && ( $_GET['page'] == 'order_delivery_date_lite' ) ) {
-                ?>
-                <div class="error">
-                    <p><?php _e( 'Minimum Delivery time (in days) will now be calculated in hours which is from current WordPress time. To keep the functionality of our plugin intact at your site, we have added +24 hours to the \'Minimum Delivery time (in hours)\' setting.', 'order-delivery-date' ); ?></p>
-            	</div>            
-                <?php                 
+            
+            $minimum_delivery_notice = get_option( 'orddd_lite_minimum_delivery_notices' );
+            if( $minimum_delivery_notice != 'yes' ) {
+                if( isset( $_GET['page'] ) && ( $_GET['page'] == 'order_delivery_date_lite' ) ) {
+                    ?>
+                    <div class="error notice is-dismissible" id="minimum_delivery_time" >
+                        <p><?php _e( 'Minimum Delivery time (in days) will now be calculated in hours which is from current WordPress time. To keep the functionality of our plugin intact at your site, we have added +24 hours to the \'Minimum Delivery time (in hours)\' setting.', 'order-delivery-date' ); ?></p>
+                    </div>            
+                    <?php 
+                    update_option( 'orddd_update_minimum_delivery_notice', 'yes' );
+                }                
             }
         }
                 
         function orddd_lite_admin_notices() {
-            update_option( 'orddd_admin_notices', 'yes' );   
+            if ( get_option( 'orddd_update_admin_notice' ) == 'yes' ) {
+                update_option( 'orddd_admin_notices', 'yes' );
+            } 
+            if ( get_option( 'orddd_update_minimum_delivery_notice' ) == 'yes' ) {
+                update_option( 'orddd_lite_minimum_delivery_notices', 'yes' );
+            }  
             die();
         }
 
         function orddd_lite_my_enqueue( $hook ) {
             global $orddd_lite_languages;
-            if( 'toplevel_page_order_delivery_date_lite' != $hook )
+            if( 'toplevel_page_order_delivery_date_lite' != $hook ) {
                 return;
-            wp_enqueue_script( 'jquery-ui-datepicker' );
-            wp_enqueue_script(
-                'jquery-ui',
-                'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js',
-                '',
-                '',
-                false
-            );
-            
-            wp_enqueue_script(
-                'jquery-min',
-                'http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js',
-                '',
-                '',
-                false
-            );
-            
-            wp_enqueue_script(
-                'jquery-ui-min',
-                'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',
-                '',
-                '',
-                false
-            );
-            
-            wp_dequeue_script( 'themeswitcher' );
-            wp_enqueue_script(
-                'themeswitcher-orddd',
-                plugins_url( '/js/jquery.themeswitcher.min.js', __FILE__ ),
-                '',
-                '',
-                false );
-            
-            foreach ( $orddd_lite_languages as $key => $value ) {
-                wp_enqueue_script(
-                $value,
-                plugins_url( "/js/i18n/jquery.ui.datepicker-$key.js", __FILE__ ),
-                '',
-                '',
-                false );
             }
             
-            wp_dequeue_script( 'jquery-tip' );
-            wp_enqueue_script(
-                'jquery-tip-orddd',
-                plugins_url( '/js/jquery.tipTip.minified.js', __FILE__ ),
-                '',
-                '',
-                false );
+            wp_dequeue_script( 'themeswitcher' );
+            wp_enqueue_script( 'themeswitcher-orddd', plugins_url( '/js/jquery.themeswitcher.min.js', __FILE__ ), array( 'jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker' ), '', false );
+                
+            foreach ( $orddd_lite_languages as $key => $value ) {
+                wp_enqueue_script( $value, plugins_url( "/js/i18n/jquery.ui.datepicker-$key.js", __FILE__ ), array( 'jquery', 'jquery-ui-datepicker' ), '', false );
+            }
             
-            wp_register_script( 'woocommerce_admin', plugins_url() . '/woocommerce/assets/js/admin/woocommerce_admin.js', array('jquery', 'jquery-ui-widget', 'jquery-ui-core'));
-            wp_enqueue_script( 'woocommerce_admin' );
-            
+            wp_register_style( 'woocommerce_admin_styles', plugins_url() . '/woocommerce/assets/css/admin.css', array(), WC_VERSION );
+            wp_enqueue_style( 'woocommerce_admin_styles' );
             wp_enqueue_style( 'order-delivery-date', plugins_url('/css/order-delivery-date.css', __FILE__ ) , '', '', false);
-            wp_enqueue_style( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' , '', '', false);
-            wp_enqueue_style( 'woocommerce_admin_styles', plugins_url() . '/woocommerce/assets/css/admin.css' );
+            wp_register_style( 'jquery-ui-style', '//code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css', '', '', false );
+            wp_enqueue_style( 'jquery-ui-style' );
             wp_enqueue_style( 'datepicker', plugins_url('/css/datepicker.css', __FILE__) , '', '', false);            
         }
         
@@ -508,12 +484,12 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
             );
              
             add_settings_field(
-                'orddd_lite_date_in_shipping',
-                __( 'Delivery date in the Shipping Section:', 'order-delivery-date' ),
+                'orddd_lite_delivery_date_fields_on_checkout_page',
+                __( 'Field placement on the Checkout page:', 'order-delivery-date' ),
                 array( &$this, 'orddd_lite_delivery_date_in_shipping_section_callback' ),
                 'orddd_lite_appearance_page',
                 'orddd_lite_appearance_section',
-                array( __( 'If the checkbox is checked then Delivery Date will be displayed in the shipping section otherwise in the billing section.</br><i>Note: WooCommerce automatically hides the Shipping section fields for Virtual products.</i>', 'order-delivery-date' ) )
+                array( __( '</br>The Delivery Date field will be displayed in the selected section.</br><i>Note: WooCommerce automatically hides the Shipping section fields for Virtual products.</i>', 'order-delivery-date' ) )
             );
         
             add_settings_field(
@@ -562,7 +538,7 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
              
             register_setting(
                 'orddd_lite_appearance_settings',
-                'orddd_lite_date_in_shipping'
+                'orddd_lite_delivery_date_fields_on_checkout_page'
             );
              
             register_setting(
@@ -828,15 +804,36 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
         */
         
         public static function orddd_lite_delivery_date_in_shipping_section_callback( $args ) {
-            if ( get_option( 'orddd_lite_date_in_shipping' ) == 'on' ) {
-        	   $date_in_shipping = "checked";
-            } else {
-                $date_in_shipping = "";
+            $orddd_lite_date_in_billing = 'checked';
+            $orddd_lite_date_in_shipping = $orddd_lite_date_before_order_notes = $orddd_lite_date_after_order_notes = '';
+            if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == "billing_section" ) {
+                $orddd_lite_date_in_billing = 'checked';
+                $orddd_lite_date_in_shipping = '';
+                $orddd_lite_date_before_order_notes = '';
+                $orddd_lite_date_after_order_notes = '';
+            } else if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == "shipping_section" ) {
+                $orddd_lite_date_in_shipping = 'checked';
+                $orddd_lite_date_in_billing = '';
+                $orddd_lite_date_before_order_notes = '';
+                $orddd_lite_date_after_order_notes = '';
+            } else if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == "before_order_notes" ) {
+                $orddd_lite_date_before_order_notes = 'checked';
+                $orddd_lite_date_in_billing = '';
+                $orddd_lite_date_in_shipping = '';
+                $orddd_lite_date_after_order_notes = '';
+            } else if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == "after_order_notes" ) {
+                $orddd_lite_date_after_order_notes = 'checked';
+                $orddd_lite_date_in_billing = '';
+                $orddd_lite_date_in_shipping = '';
+                $orddd_lite_date_before_order_notes = '';
             }
-        
-        	echo '<input type="checkbox" name="orddd_lite_date_in_shipping" id="orddd_lite_date_in_shipping" class="day-checkbox"' . $date_in_shipping . ' value="on"/>';
-        
-            $html = '<label for="orddd_lite_date_in_shipping"> ' . $args[ 0 ] . '</label>';
+            
+            echo '<input type="radio" name="orddd_lite_delivery_date_fields_on_checkout_page" id="orddd_lite_delivery_date_fields_on_checkout_page" value="billing_section" ' . $orddd_lite_date_in_billing . '>' . __( 'In Billing Section', 'order-delivery-date' ) . '&nbsp;&nbsp;
+                <input type="radio" name="orddd_lite_delivery_date_fields_on_checkout_page" id="orddd_lite_delivery_date_fields_on_checkout_page" value="shipping_section" ' . $orddd_lite_date_in_shipping . '>' . __( 'In Shipping Section', 'order-delivery-date' ) . '&nbsp;&nbsp;
+                <input type="radio" name="orddd_lite_delivery_date_fields_on_checkout_page" id="orddd_lite_delivery_date_fields_on_checkout_page" value="before_order_notes" ' . $orddd_lite_date_before_order_notes . '>' . __( 'Before Order Notes', 'order-delivery-date' ) . '&nbsp;&nbsp;
+		        <input type="radio" name="orddd_lite_delivery_date_fields_on_checkout_page" id="orddd_lite_delivery_date_fields_on_checkout_page" value="after_order_notes" ' . $orddd_lite_date_after_order_notes . '>' . __( 'After Order Notes', 'order-delivery-date' );
+        	
+            $html = '<label for="orddd_lite_delivery_date_fields_on_checkout_page"> ' . $args[ 0 ] . '</label>';
         	echo $html;
         }
         
@@ -897,25 +894,17 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
         function orddd_lite_my_custom_checkout_field( $checkout ) {
             global $orddd_lite_weekdays;
             
-            wp_enqueue_script( 'jquery' );
-            wp_deregister_script( 'jqueryui');
-            wp_enqueue_script( 'jquery-ui-datepicker' );
-        
             $calendar_theme = get_option( 'orddd_lite_calendar_theme' );
             if ( $calendar_theme == '' ) {
                 $calendar_theme = 'base';
             }
-            wp_dequeue_style( 'jquery-ui' );
-            wp_enqueue_style( 'jquery-ui-orddd', "//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/$calendar_theme/jquery-ui.css" , '', '', false );
+            wp_dequeue_style( 'jquery-ui-style' );
+            wp_register_style( 'jquery-ui-style-orddd-lite', "//code.jquery.com/ui/1.9.2/themes/$calendar_theme/jquery-ui.css", '', '', false );
+            wp_enqueue_style( 'jquery-ui-style-orddd-lite' );
             wp_enqueue_style( 'datepicker', plugins_url('/css/datepicker.css', __FILE__) , '', '', false);
         
-            wp_enqueue_script(
-                'initialize-datepicker.js',
-                plugins_url('/js/initialize-datepicker.js', __FILE__),
-                '',
-                '',
-                false
-            );
+            wp_dequeue_script( 'initialize-datepicker' );
+            wp_enqueue_script( 'initialize-datepicker-orddd', plugins_url('/js/initialize-datepicker.js', __FILE__ ), '', '', false );
         
             if ( isset( $_GET[ 'lang' ] ) && $_GET[ 'lang' ] != '' && $_GET[ 'lang' ] != null ) {
                 $language_selected = $_GET['lang'];
@@ -931,15 +920,12 @@ if ( !class_exists( 'order_delivery_date_lite' ) ) {
                         }
                     }
                 }
-                if ( $language_selected == "" ) $language_selected = "en-GB";
+                if ( $language_selected == "" ) {
+                    $language_selected = "en-GB";
+                }
             }
              
-            wp_enqueue_script(
-                $language_selected,
-                plugins_url( "/js/i18n/jquery.ui.datepicker-$language_selected.js", __FILE__ ),
-                '',
-                '',
-                false );
+            wp_enqueue_script( $language_selected, plugins_url( "/js/i18n/jquery.ui.datepicker-$language_selected.js", __FILE__ ), array( 'jquery', 'jquery-ui-datepicker' ), '', false );
             $first_day_of_week = '1';
             if( get_option( 'orddd_lite_start_of_week' ) != '' ) {
                 $first_day_of_week = get_option( 'orddd_lite_start_of_week' );

@@ -11,7 +11,6 @@ class IPQ_Filters {
 		add_filter( 'woocommerce_quantity_input_min', array( $this, 'input_min_value' ), 1, 2);
 		add_filter( 'woocommerce_quantity_input_max', array( $this, 'input_max_value' ), 1, 2);
 		add_filter( 'woocommerce_quantity_input_step', array( $this, 'input_step_value' ), 1, 2);
-		add_filter( 'woocommerce_quantity_input_fixed_step', array( $this, 'input_step_value' ), 1, 2);
 		
 		// Product input box argument filter
 		add_filter( 'woocommerce_quantity_input_args', array( $this, 'input_set_all_values' ), 1, 2 );
@@ -38,9 +37,8 @@ class IPQ_Filters {
 
 		// Get Value from Rule
 		$min = wpbo_get_value_from_rule( 'min', $product, $rule );
-		
 		// Return Value
-		if ( $min == '' or $min == null ) {
+		if ( $min == '' or $min == null or (isset($min['min']) and $min['min'] == "")) {
 			return $default;
 		} else {
 			return $min;
@@ -70,7 +68,7 @@ class IPQ_Filters {
 		$max = wpbo_get_value_from_rule( 'max', $product, $rule );
 	
 		// Return Value
-		if ( $max == '' or $max == null ) {
+		if ( $max == '' or $max == null or (isset($max['max']) and $max['max'] == "")) {
 			return $default;
 		} else {
 			return $max;
@@ -100,37 +98,7 @@ class IPQ_Filters {
 		$step = wpbo_get_value_from_rule( 'step', $product, $rule );
 	
 		// Return Value
-		if ( $step == '' or $step == null ) {
-			return $default;
-		} else {
-			return $step;
-		}
-	}
-
-	/*
-	*	Filter Step Quantity Value for Input Boxes woocommerce_quantity_input_step for Cart
-	*
-	*	@access public 
-	*	@param  int 	default
-	*	@param  obj		product
-	*	@return int		step
-	*
-	*/	
-	public function input_fixed_step_value( $default, $product ) {
-		
-		// Return Defaults if it isn't a simple product
-		if( $product->product_type != 'simple' ) {
-			return $default;
-		}
-		
-		// Get Rule
-		$rule = wpbo_get_applied_rule( $product );
-		
-		// Get Value from Rule
-		$step = wpbo_get_value_from_rule( 'fixed_step', $product, $rule );
-	
-		// Return Value
-		if ( $step == '' or $step == null ) {
+		if ( $step == '' or $step == null or (isset($step['step']) and $step['step'] == "")) {
 			return $default;
 		} else {
 			return $step;
@@ -197,10 +165,6 @@ class IPQ_Filters {
 		// Set step value
 		if ( $values['step'] != '' ) {
 			$args['step'] = $values['step'];
-		} 
-
-		if ( $values['fixed_step'] != '' ) {
-			$args['fixed_step'] = $values['fixed_step'];
 		} 
 
 		return $args;

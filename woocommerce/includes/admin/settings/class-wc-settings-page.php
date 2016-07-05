@@ -15,15 +15,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_Settings_Page' ) ) :
 
 /**
- * WC_Settings_Page
+ * WC_Settings_Page.
  */
-class WC_Settings_Page {
+abstract class WC_Settings_Page {
 
-	protected $id    = '';
+	/**
+	 * Setting page id.
+	 *
+	 * @var string
+	 */
+	protected $id = '';
+
+	/**
+	 * Setting page label.
+	 *
+	 * @var string
+	 */
 	protected $label = '';
 
 	/**
-	 * Add this page to settings
+	 * Constructor.
+	 */
+	public function __construct() {
+		add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+		add_action( 'woocommerce_sections_' . $this->id, array( $this, 'output_sections' ) );
+		add_action( 'woocommerce_settings_' . $this->id, array( $this, 'output' ) );
+		add_action( 'woocommerce_settings_save_' . $this->id, array( $this, 'save' ) );
+	}
+
+	/**
+	 * Add this page to settings.
 	 */
 	public function add_settings_page( $pages ) {
 		$pages[ $this->id ] = $this->label;
@@ -32,7 +53,7 @@ class WC_Settings_Page {
 	}
 
 	/**
-	 * Get settings array
+	 * Get settings array.
 	 *
 	 * @return array
 	 */
@@ -41,7 +62,7 @@ class WC_Settings_Page {
 	}
 
 	/**
-	 * Get sections
+	 * Get sections.
 	 *
 	 * @return array
 	 */
@@ -50,14 +71,14 @@ class WC_Settings_Page {
 	}
 
 	/**
-	 * Output sections
+	 * Output sections.
 	 */
 	public function output_sections() {
 		global $current_section;
 
 		$sections = $this->get_sections();
 
-		if ( empty( $sections ) ) {
+		if ( empty( $sections ) || 1 === sizeof( $sections ) ) {
 			return;
 		}
 
@@ -73,7 +94,7 @@ class WC_Settings_Page {
 	}
 
 	/**
-	 * Output the settings
+	 * Output the settings.
 	 */
 	public function output() {
 		$settings = $this->get_settings();
@@ -82,7 +103,7 @@ class WC_Settings_Page {
 	}
 
 	/**
-	 * Save settings
+	 * Save settings.
 	 */
 	public function save() {
 		global $current_section;

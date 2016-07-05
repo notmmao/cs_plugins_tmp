@@ -4,12 +4,16 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit;
 }
 
 ?>
-
 <div id="message" class="updated woocommerce-message wc-connect">
-	<p><?php _e( '<strong>Your theme does not declare WooCommerce support</strong> &#8211; if you encounter layout issues please read our integration guide or choose a WooCommerce theme :)', 'woocommerce' ); ?></p>
-	<p class="submit"><a href="<?php echo esc_url( apply_filters( 'woocommerce_docs_url', 'http://docs.woothemes.com/document/third-party-custom-theme-compatibility/', 'theme-compatibility' ) ); ?>" class="button-primary"><?php _e( 'Theme Integration Guide', 'woocommerce' ); ?></a> <a class="skip button-primary" href="<?php echo esc_url( add_query_arg( 'hide_theme_support_notice', 'true' ) ); ?>"><?php _e( 'Hide this notice', 'woocommerce' ); ?></a></p>
+	<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'theme_support' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php _e( 'Dismiss', 'woocommerce' ); ?></a>
+
+	<p><?php printf( __( '<strong>Your theme does not declare WooCommerce support</strong> &#8211; Please read our %sintegration%s guide or check out our %sStorefront%s theme which is totally free to download and designed specifically for use with WooCommerce.', 'woocommerce' ), '<a target="_blank" href="' . esc_url( apply_filters( 'woocommerce_docs_url', 'https://docs.woothemes.com/document/third-party-custom-theme-compatibility/', 'theme-compatibility' ) ) . '">', '</a>', '<a target="_blank" href="' . esc_url( admin_url( 'theme-install.php?theme=storefront' ) ) . '">', '</a>' ); ?></p>
+	<p class="submit">
+		<a href="https://www.woothemes.com/storefront/?utm_source=notice&amp;utm_medium=product&amp;utm_content=storefront&amp;utm_campaign=woocommerceplugin" class="button-primary" target="_blank"><?php _e( 'Read More About Storefront', 'woocommerce' ); ?></a>
+		<a href="<?php echo esc_url( apply_filters( 'woocommerce_docs_url', 'http://docs.woothemes.com/document/third-party-custom-theme-compatibility/?utm_source=notice&utm_medium=product&utm_content=themecompatibility&utm_campaign=woocommerceplugin' ) ); ?>" class="button-secondary" target="_blank"><?php _e( 'Theme Integration Guide', 'woocommerce' ); ?></a>
+	</p>
 </div>

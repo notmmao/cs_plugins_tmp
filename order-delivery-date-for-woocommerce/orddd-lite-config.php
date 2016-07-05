@@ -32,6 +32,7 @@ $orddd_lite_languages_locale = array(
     'Albanian'            => array( 'sq_AL.utf8', 'sqi', 'sq-AL' ),
     'Korean'              => array( 'ko_KR.utf8', 'kor', 'ko-KR' ), 
     'Hindi India'         => array( 'hi_IN.utf8', 'hin', 'hi-IN' ),
+    'Hebrew'              => array( 'he_IL.utf8', 'heb', 'he_IL' ),
     'Croatian'            => array( 'hr_HR.utf8', 'hrv', 'hr-HR' ), 
     'Armenian'            => array( 'hy_AM.utf8', 'hye' ), 
     'Icelandic'           => array( 'is_IS.utf8', 'isl', 'is-IS' ),
@@ -166,6 +167,7 @@ $orddd_lite_languages = array(
 		'hi'	=>'Hindi India',
 		'hr'	=> 'Croatian',
 		'hy'	=> 'Armenian',
+        'he'    => 'Hebrew',
 		'is'	=> 'Icelandic',
 		'it'	=> 'Italian',
 		'ka'	=> 'Georgian',
@@ -207,10 +209,17 @@ define( 'ORDDD_LITE_HOLIDAY_DATE_FORMAT', 'n-j-Y' );
 define( 'ORDDD_LITE_CALENDAR_THEME', 'smoothness' );
 define( 'ORDDD_LITE_CALENDAR_THEME_NAME', 'Smoothness' );
 
-if ( get_option( 'orddd_lite_date_in_shipping' ) == 'on' ) {
-	define( 'ORDDD_SHOPPING_CART_HOOK', 'woocommerce_after_checkout_shipping_form' );
+if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == 'billing_section' ) {
+    define( 'ORDDD_LITE_SHOPPING_CART_HOOK', 'woocommerce_after_checkout_billing_form' );
+} else if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == 'shipping_section' ) {
+    define( 'ORDDD_LITE_SHOPPING_CART_HOOK','woocommerce_after_checkout_shipping_form' );
+} else if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == 'before_order_notes' ) {
+    define( 'ORDDD_LITE_SHOPPING_CART_HOOK','woocommerce_before_order_notes' );
+} else if ( get_option( 'orddd_lite_delivery_date_fields_on_checkout_page' ) == 'after_order_notes' ) {
+    define( 'ORDDD_LITE_SHOPPING_CART_HOOK','woocommerce_after_order_notes' );
+} else if ( get_option( 'orddd_lite_date_in_shipping' ) == 'on' ) {
+    define( 'ORDDD_LITE_SHOPPING_CART_HOOK','woocommerce_after_checkout_shipping_form' );
 } else {
-	define( 'ORDDD_SHOPPING_CART_HOOK','woocommerce_after_checkout_billing_form' );
+    define( 'ORDDD_LITE_SHOPPING_CART_HOOK', 'woocommerce_after_checkout_billing_form' );    
 }
-
 ?>

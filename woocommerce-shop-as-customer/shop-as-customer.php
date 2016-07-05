@@ -5,7 +5,7 @@
  * Author: cxThemes
  * Author URI: http://codecanyon.net/user/cxThemes
  * Plugin URI: http://codecanyon.net/item/shop-as-customer-for-woocommerce/7043722
- * Version: 1.15
+ * Version: 1.16
  * Text Domain: shop-as-customer
  * Domain Path: /languages/
  *
@@ -24,17 +24,17 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * Define Constants
  */
-define( 'WC_SHOP_AS_CUSTOMER_VERSION', '1.15' );
+define( 'WC_SHOP_AS_CUSTOMER_VERSION', '1.16' );
 define( 'WC_SHOP_AS_CUSTOMER_REQUIRED_WOOCOMMERCE_VERSION', 2.2 );
+define( 'WC_SHOP_AS_CUSTOMER_PLUGIN_BASENAME', plugin_basename( __FILE__ ) ); // woocommerce-email-control/ec-email-control.php
 
 /**
  * Update Check
  */
-require 'plugin-updates/plugin-update-checker.php';
-$wc_shop_as_customer_update = new PluginUpdateChecker(
-	'http://cxthemes.com/plugins/woocommerce-shop-as-customer/shop-as-customer.json',
+require 'includes/updates/cxthemes-plugin-update-checker.php';
+$wc_shop_as_customer_update = new CX_Shop_As_Customer_Plugin_Update_Checker(
 	__FILE__,
-	'shop-as-customer'
+	'woocommerce-shop-as-customer'
 );
 
 /**
@@ -152,21 +152,24 @@ class WC_Shop_As_Customer {
 	 * Localization
 	 */
 	public function load_translation() {
-		
-		// Domain ID - used in eg __( 'Text', 'email-control' )
-		$domain = 'shop-as-customer';
 
+		// Domain ID - used in eg __( 'Text', 'pluginname' )
+		$domain = 'shop-as-customer';
+		
 		// get the languages locale eg 'en_US'
 		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-
+		
 		// Look for languages here: wp-content/languages/pluginname/pluginname-en_US.mo
-		load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
-
+		load_textdomain( $domain, WP_LANG_DIR . "/{$domain}/{$domain}-{$locale}.mo" ); // Don't mention this location in the docs - but keep it for legacy.
+		
+		// Look for languages here: wp-content/languages/plugins/pluginname-en_US.mo
+		load_textdomain( $domain, WP_LANG_DIR . "/plugins/{$domain}-{$locale}.mo" );
+		
 		// Look for languages here: wp-content/languages/pluginname-en_US.mo
-		load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '-' . $locale . '.mo' );
-
+		load_textdomain( $domain, WP_LANG_DIR . "/{$domain}-{$locale}.mo" );
+		
 		// Look for languages here: wp-content/plugins/pluginname/languages/pluginname-en_US.mo
-		load_plugin_textdomain( $domain, FALSE, dirname(plugin_basename(__FILE__)).'/languages/');
+		load_plugin_textdomain( $domain, FALSE, dirname( plugin_basename( __FILE__ ) ) . "/languages/" );
 	}
 
 	/**
@@ -195,27 +198,60 @@ class WC_Shop_As_Customer {
 
 		wp_enqueue_script( 'woocommerce_admin' );
     	wp_enqueue_script( 'farbtastic' );
-    	wp_enqueue_script( 'ajax-chosen' );
-    	wp_enqueue_script( 'chosen' );
     	wp_enqueue_script( 'jquery-ui-sortable' );
-
-    	/* Top Drop-Down Stuff */
-		wp_register_style( 'woocommerce-shop-as-customer', plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/css/shop-as-customer-styles.css', basename( __FILE__ ) ), '', WC_SHOP_AS_CUSTOMER_VERSION, 'screen' );
-		wp_enqueue_style( 'woocommerce-shop-as-customer' );
-		wp_register_script( 'woocommerce-shop-as-customer', plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/shop-as-customer.js', basename( __FILE__ ) ), array('jquery'), $woocommerce->version );
-		wp_enqueue_script( 'woocommerce-shop-as-customer' );
-
-		/* Options Page Stuff */
-		wp_register_style( 'woocommerce-shop-as-customer-options', plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/css/options-page-style.css', basename( __FILE__ ) ), '', WC_SHOP_AS_CUSTOMER_VERSION, 'screen' );
-		wp_enqueue_style( 'woocommerce-shop-as-customer-options' );
-
-		$woocommerce_shop_as_customer_params = array(
-			'ajax_url' 						=> admin_url('admin-ajax.php'),
-			'nonce'							=> wp_create_nonce("search-customers")
+    	
+    	/* Top Drop-Down Stuff - Chosen */
+    	wp_enqueue_style(
+			'chosen',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/chosen/chosen.css', basename( __FILE__ ) ),
+			array(),
+			WC_SHOP_AS_CUSTOMER_VERSION,
+			'screen'
+		);
+		wp_enqueue_script(
+			'chosen',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/chosen/chosen.jquery.js', basename( __FILE__ ) ),
+			array( 'jquery' ),
+			$woocommerce->version
+		);
+		wp_enqueue_script(
+			'ajax-chosen',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/chosen/ajax-chosen.jquery.js', basename( __FILE__ ) ),
+			array( 'jquery' ),
+			$woocommerce->version
+		);
+		
+		/* Top Drop-Down Stuff */
+		wp_enqueue_style(
+			'woocommerce-shop-as-customer',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/css/shop-as-customer-styles.css', basename( __FILE__ ) ),
+			array(),
+			WC_SHOP_AS_CUSTOMER_VERSION,
+			'screen'
+		);
+		wp_enqueue_script(
+			'woocommerce-shop-as-customer',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/shop-as-customer.js', basename( __FILE__ ) ),
+			array('jquery'),
+			$woocommerce->version
 		);
 
-		wp_localize_script( 'woocommerce-shop-as-customer', 'woocommerce_shop_as_customer_params', $woocommerce_shop_as_customer_params );
-
+		/* Options Page Stuff */
+		wp_enqueue_style(
+			'woocommerce-shop-as-customer-options',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/css/options-page-style.css', basename( __FILE__ ) ),
+			array(),
+			WC_SHOP_AS_CUSTOMER_VERSION,
+			'screen'
+		);
+		wp_localize_script(
+			'woocommerce-shop-as-customer',
+			'woocommerce_shop_as_customer_params',
+			array(
+				'ajax_url' => admin_url('admin-ajax.php'),
+				'nonce'    => wp_create_nonce("search-customers"),
+			)
+		);
 	}
 
 	/**
@@ -228,21 +264,6 @@ class WC_Shop_As_Customer {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_script(
-			'chosen',
-			$woocommerce->plugin_url() . '/assets/js/chosen/chosen.jquery'.$suffix.'.js',
-			array('jquery'),
-			$woocommerce->version
-		);
-		
-		wp_register_script(
-			'ajax-chosen',
-			$woocommerce->plugin_url() . '/assets/js/chosen/ajax-chosen.jquery'.$suffix.'.js',
-			array('jquery',
-				'chosen'),
-			$woocommerce->version
-		);
-		
-		wp_register_script(
 			'jquery-tiptip',
 			$woocommerce->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip'.$suffix.'.js',
 			array('jquery'),
@@ -251,13 +272,33 @@ class WC_Shop_As_Customer {
 
 		wp_enqueue_script( 'woocommerce_admin' );
     	wp_enqueue_script( 'farbtastic' );
-    	wp_enqueue_script( 'chosen' );
-    	wp_enqueue_script( 'ajax-chosen' );
     	wp_enqueue_script( 'jquery-ui-sortable' );
     	wp_enqueue_script( 'jquery-ui-autocomplete' );
     	wp_enqueue_script( 'jquery-migrate' );
 		wp_enqueue_script( 'jquery-tiptip' );
-
+		
+		/* Top Drop-Down Stuff - Chosen */
+    	wp_enqueue_style(
+			'chosen',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/chosen/chosen.css', basename( __FILE__ ) ),
+			array(),
+			WC_SHOP_AS_CUSTOMER_VERSION,
+			'screen'
+		);
+		wp_enqueue_script(
+			'chosen',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/chosen/chosen.jquery.js', basename( __FILE__ ) ),
+			array( 'jquery' ),
+			$woocommerce->version
+		);
+		wp_enqueue_script(
+			'ajax-chosen',
+			plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/chosen/ajax-chosen.jquery.js', basename( __FILE__ ) ),
+			array( 'jquery' ),
+			$woocommerce->version
+		);
+		
+		/* Top Drop-Down Stuff */
     	wp_enqueue_style(
 			'woocommerce-shop-as-customer',
     		plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/css/shop-as-customer-styles.css', basename( __FILE__ ) ),
@@ -265,7 +306,6 @@ class WC_Shop_As_Customer {
     		WC_SHOP_AS_CUSTOMER_VERSION,
     		'screen'
 		);
-
     	wp_enqueue_script(
 			'woocommerce-shop-as-customer',
     		plugins_url( basename( plugin_dir_path( __FILE__ ) ) . '/assets/js/shop-as-customer.js', basename( __FILE__ ) ),
@@ -502,7 +542,7 @@ class WC_Shop_As_Customer {
 		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) )
 			define( 'WOOCOMMERCE_CHECKOUT', true );
 
-		if ( ! isset( $_POST["payment_method"] ) ) {
+		if ( ! isset( $_POST['payment_method'] ) ) {
 			add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
 		}
 
@@ -604,14 +644,16 @@ class WC_Shop_As_Customer {
 	 */
 	public function redirect_customer_on_order_processed( $order_id, $posted = null ) {
 		global $woocommerce;
-		
-		// global $wp_rewrite;
-		// if ( ! isset( $wp_rewrite ) ) $wp_rewrite = new WP_Rewrite();
 
 		if ( isset( $_POST['woocommerce_checkout_save_order'] ) || ! isset( $_POST['payment_method'] ) ) {
 			
+			/**
+			 * Clicked 'Create this Order'
+			 */
+			
 			$order = new WC_Order( $order_id );
-
+			
+			// Add a note & post-meta to the order so user knows was created by SAC.
 			if ( $original_user = self::get_original_user() ) {
 				if ( function_exists('wc_add_notice') ) {
 					$order->add_order_note( sprintf( __( 'Order created by %1$s using Shop as Customer', 'shop-as-customer' ), $original_user->display_name ), 0);
@@ -625,16 +667,22 @@ class WC_Shop_As_Customer {
 			// retires this order they will manually have to go and increment the stock
 			// numbers again - it's not re-incremented automatically.
 			$order->reduce_order_stock();
-
-			if ( version_compare( $woocommerce->version, '2.1', '<' ) ) {
-				$thanks_page_id = woocommerce_get_page_id( 'thanks' );
-				$thanks_page    = get_permalink( $thanks_page_id );
-				$thanks_page = esc_url_raw( add_query_arg( 'key', $order->order_key, add_query_arg( 'order', $order_id, add_query_arg( 'order_on_behalf', 1, $thanks_page ) ) ) );
+			
+			// Zero total orders should immediately be set to 'Processing' as no more action is required on the order, and the Admin should be notified that there's a new order.
+			if ( 0 == $order->calculate_totals() ) {
+				
+				// $order->payment_complete(); // Tried this method - but it sends Customer Email which is not desired.
+				
+				// Prevent the Customer from receiving an email, as this is an optional action that the Admin can do on the next page.
+				add_filter( 'woocommerce_email_enabled_customer_processing_order', '__return_false' );
+				
+				// Change the order to Processing.
+				$order->update_status( 'processing' );
 			}
-			else {
-				$thanks_page = wc_get_endpoint_url( 'order-received', $order_id, get_permalink( wc_get_page_id( 'checkout' ) ) );
-				$thanks_page = esc_url_raw( add_query_arg( 'key', $order->order_key, add_query_arg( 'order_on_behalf', 1, $thanks_page ) ) );
-			}
+			
+			$thanks_page = wc_get_endpoint_url( 'order-received', $order_id, get_permalink( wc_get_page_id( 'checkout' ) ) );
+			$thanks_page = esc_url_raw( add_query_arg( 'key', $order->order_key, add_query_arg( 'order_on_behalf', 1, $thanks_page ) ) );
+			
 			
 			$result = array(
 				"result" => 'success',
@@ -651,6 +699,10 @@ class WC_Shop_As_Customer {
 
 		}
 		else {
+			
+			/**
+			 * Clicked 'Pay for this Order'
+			 */
 			
 			$order = new WC_Order( $order_id );
 
