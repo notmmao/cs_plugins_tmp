@@ -98,18 +98,17 @@ if(is_admin()) {
             <tr>
                 <td colspan="9" style="margin: 0px;padding: 0px;">
                 <?php 
+                    $time= microtime();
 
                     $orderAltEmail = "";
                     $pdo = get_proof_pdo();
-                    $proofOrderId = $post->ID + 100000;
+                    $proofOrderId = $post->ID;
                     $files = $pdo->query("SELECT files.id, files.side, files.name, files.size, files.status, files.item_id, files.order_id, file_comments.comment FROM files LEFT JOIN file_comments ON file_comments.file_id = files.id WHERE order_id = {$proofOrderId} AND status NOT IN ('archived', 'deleted', 'uploaded', 'upload_backup')")->fetchAll();
 
                     $filesGroupedByItem = array();
 
                     $orderInfo = $pdo->query("SELECT `alt_email` FROM orders WHERE id = {$proofOrderId}")->fetch();
                     $orderHistory = $pdo->query("SELECT * FROM order_history WHERE order_id = {$proofOrderId} ORDER BY id DESC")->fetchAll();
-
-                    // var_dump($orderHistory);
 
                     if ($orderInfo['alt_email']) {
                         $orderAltEmail= $orderInfo['alt_email'];
@@ -122,11 +121,6 @@ if(is_admin()) {
                         }
                         $filesGroupedByItem[$file['item_id']][$index] = $file;
                     }
-                    // echo "<pre>";
-
-                    // var_dump($filesGroupedByItem);
-                    // echo "</pre>";
-                    // die;
 
                     foreach ($filesGroupedByItem as $itemId => $file) {
                         if(!isset($file[0])) {
@@ -138,10 +132,8 @@ if(is_admin()) {
 
                         ksort($filesGroupedByItem[$itemId]);
                     }
-
                 ?>
                 <div id='ssp_order_info_<?php echo absint( $post->ID );?>' style="border-bottom: 8px solid rgb(236, 236, 236); display:none;">
-                <!-- <div id='ssp_order_info_<?php echo absint( $post->ID );?>' style="border-bottom: 8px solid rgb(236, 236, 236);"> -->
 
                 <div class="woocommerce_order_items_wrapper wc-order-items-editable">
                 <table cellpadding="0" cellspacing="0" class="woocommerce_order_items" style="border-top: 1px solid rgb(234, 234, 234);">
@@ -169,7 +161,7 @@ if(is_admin()) {
                             $item_meta = $order->get_item_meta($item_id);
 
                             include(__DIR__ . '/html-order-item.php');
-                            do_action( 'woocommerce_order_item_' . $item['type'] . '_html', $item_id, $item);
+                            do_action( 'woocommerce_order_item_' . $item['type'] . '_html', $item_id, $item); 
                         }
 
                         ?>
@@ -199,18 +191,12 @@ if(is_admin()) {
     function ssp_update_items($orderId) {
         $a = wp_remote_post(PROOF_DOMAIN_NAME . '/api/update-items/' . $orderId);
     }
- 
-    // function ssp_create_order($order_id, $posted) {
-    //     $a = wp_remote_post(PROOF_DOMAIN_NAME . '/api/create-order/' . $order_id);
-    //     var_dump($a);
-    // }
 
     add_action( 'manage_shop_order_posts_custom_column', 'ssp_render_shop_order_columns', 5);
     add_action( 'woocommerce_ajax_add_order_item_meta', 'ssp_add_item', 10, 2);
     add_action( 'woocommerce_saved_order_items', 'ssp_update_items', 10, 2);
     add_action( 'woocommerce_delete_order_item', 'ssp_delete_item', 10, 1);
     add_action( 'woocommerce_update_order_item', 'ssp_update_item', 10, 1);
-    // add_action( 'woocommerce_checkout_order_processed', 'ssp_create_order', 10, 2);
 
     function ssp_enqueue_admin_scripts($hook) {
         global $post;
@@ -233,11 +219,15 @@ if(is_admin()) {
     add_action('admin_enqueue_scripts', 'ssp_enqueue_admin_scripts');
 
 } // End Admin Functions
-
-function ssp_add_file($order_id, $product_id, $full_file_path, $mode) {
-    $a = wp_remote_post(PROOF_DOMAIN_NAME . '/api/update-files/' . $order_id);
+function ssp_create_order($order_id) {
+    wp_remote_post(PROOF_DOMAIN_NAME . '/api/create-order/' . $order_id);
 }
 
+function ssp_add_file($order_id, $product_id, $full_file_path, $mode) {
+    wp_remote_post(PROOF_DOMAIN_NAME . '/api/update-files/' . $order_id);
+}
+
+add_action( 'woocommerce_checkout_order_processed', 'ssp_create_order', 12, 1);
 add_action( 'wpf_upload_complete', 'ssp_add_file', 10, 4);
 
 if(!function_exists('wc_tax_enabled')) {

@@ -1,5 +1,5 @@
-<tr class="item <?php echo apply_filters( 'woocommerce_admin_html_order_item_class', ( ! empty( $class ) ? $class : '' ), $item ); ?>" data-order_item_id="<?php echo $item_id; ?>">
-    <td class="check-column"><input type="checkbox" data-selected="0" class="item-selector belongs-to-order-<?php echo $post->ID?> belongs-to-item-<?php echo $item_id ?>" data-item="<?php echo $item_id; ?>" data-order="<?php echo ($post->ID + 100000); ?>"/></td>
+<tr class="proofing-item <?php echo apply_filters( 'woocommerce_admin_html_order_item_class', ( ! empty( $class ) ? $class : '' ), $item ); ?>" data-order_item_id="<?php echo $item_id; ?>">
+    <td class="check-column"><input type="checkbox" data-selected="0" class="item-selector belongs-to-order-<?php echo $post->ID?> belongs-to-item-<?php echo $item_id ?>" data-item="<?php echo $item_id; ?>" data-order="<?php echo ($post->ID); ?>"/></td>
     <td class="name">
         <?php echo ( $_product && $_product->get_sku() ) ? esc_html( $_product->get_sku() ) . ' &ndash; ' : ''; ?>
 
@@ -53,8 +53,8 @@
 
 <tr>
 <td></td>
-<td colspan="5">    
-<div class="container-fluid">
+<td colspan="5" style="padding: 0px 0px 0px 6px;">    
+<table style="width:100%;"">
 <?php
 
 if(!isset($filesGroupedByItem[$item_id])) {
@@ -66,8 +66,8 @@ if(!isset($filesGroupedByItem[$item_id])) {
 foreach ($filesGroupedByItem[$item_id] as $proofFile) {
 // BEGIN FILE OUTPUT /////////////////////////////////////////////////////////////
 ?>
-    <div class="row">
-        <div class="col-xs-6" style="padding-left: 0;">
+    <tr style="border:0;">
+        <td style="width:50%; overflow: hidden; padding:0;">
             <small>
                 <?php if(!empty($proofFile['name'])): ?>
                 <a class="proof-file-name" href="<?php echo PROOF_DOMAIN_NAME; ?>/file/<?php echo $proofFile['id'] ?>"><?php echo $proofFile['name'] ?></a>
@@ -77,42 +77,42 @@ foreach ($filesGroupedByItem[$item_id] as $proofFile) {
                     &nbsp;<i class="proof-file-size"></i>  
                 <?php endif; ?>
             </small>
-        </div>
-        <div class="col-xs-1">
+        </td>
+        <td style="width:20%; padding:0;">
             <?php
-            switch ($proofFile['status']) {
-                case 'missing': {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' class='label belongs-to-item-". $proofFile['item_id'] . " {$proofFile['side']} file-status missing belongs-to-order-" . $post->ID . "'></span>";
-                } break;
-                case 'approved': {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-success'>approved</span>";
-                } break;
-                case 'not approved': {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-danger'>not approved</span>";
-                } break;
-                case 'approval': {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-warning'>approval</span>";
-                } break;
-                case 'ready': {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-info'>ready</span>";
-                } break;
-                case 'missing': {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-default'>missing</span>";
-                } break;
-                case 'issues': {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-default'>issues</span>";
-                } break;
-                default: {
-                    echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-default'>" . $proofFile['status'] . "</span>";
-                } break;
-            }
-        ?>
-        </div>
-        <div class="col-xs-1 text-right">
+                switch ($proofFile['status']) {
+                    case 'missing': {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' class='label belongs-to-item-". $proofFile['item_id'] . " {$proofFile['side']} file-status missing belongs-to-order-" . $post->ID . "'></span>";
+                    } break;
+                    case 'approved': {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-success'>approved</span>";
+                    } break;
+                    case 'not approved': {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-danger'>not approved</span>";
+                    } break;
+                    case 'approval': {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-warning'>approval</span>";
+                    } break;
+                    case 'ready': {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-info'>ready</span>";
+                    } break;
+                    case 'missing': {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-default'>missing</span>";
+                    } break;
+                    case 'issues': {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-default'>issues</span>";
+                    } break;
+                    default: {
+                        echo "<span data-side='".$proofFile['side']."' data-item-id='" . $proofFile['item_id'] . "' data-file-id='" . $proofFile['id'] . "' class='{$proofFile['side']} label belongs-to-item-". $proofFile['item_id'] . " file-status belongs-to-order-" . $post->ID . " label-default'>" . $proofFile['status'] . "</span>";
+                    } break;
+                }
+            ?>
+        </td>
+        <td style="width:10%; padding:0;">
             <button data-action="<?php echo PROOF_DOMAIN_NAME; ?>/api/reset-file-status/<?php echo $proofFile['id'] ?>" class="btn btn-redirect btn-link btn-small reset-button">reset</button><span class="allow-uploads loader-box loader-box-reset"></span>
-        </div>
-        <div class="col-xs-1 text-right">
-            <div class="fileupload" style="padding: 0; margin: 0;" data-action="<?php echo PROOF_DOMAIN_NAME; ?>/upload/<?php echo ($post->ID + 100000) ?>/">
+        </td>
+        <td style="width:10%; padding:0;">
+            <div class="fileupload" style="padding: 0; margin: 0;" data-action="<?php echo PROOF_DOMAIN_NAME; ?>/upload/<?php echo ($post->ID) ?>/">
                 <div class="pseudo-input MAX_FILE_SIZE" data-value="524288000" /></div>
                 <span class="btn btn-link btn-small fileinput-button">
                     <span>upload...</span>
@@ -121,27 +121,37 @@ foreach ($filesGroupedByItem[$item_id] as $proofFile) {
                 <span class="upload-messages" style="font-size:0.8em; position: absolute; top: 4px;"></span>
                 <i class="icon-minus-sign abort-icon" style="display:none; cursor: pointer;"></i>
                 <div class="pseudo-input side" data-value="<?php echo $proofFile['side'] ?>" /></div>
-                <div class="pseudo-input order" data-value="<?php echo ($post->ID + 100000) ?>"></div>
+                <div class="pseudo-input order" data-value="<?php echo ($post->ID) ?>"></div>
                 <div class="pseudo-input item" data-value="<?php echo $proofFile['item_id'] ?>" /></div>
                 <div class="pseudo-input admin" data-value="1" /></div>
             </div>
-        </div>
-        <div class="col-xs-1 text-right">
+        </td>
+        <td style="width:40px; padding:0;">
             <button data-action="<?php echo PROOF_DOMAIN_NAME; ?>/api/remove/<?php echo $proofFile['id'] ?>" type="submit" style="margin: 0px; font-size:1.3em;" class="btn-link btn-redirect file-remove btn-redirect"><strong>&times;</strong></button><span class="allow-uploads loader-box loader-box-reset"></span>
-        </div>
-    </div>
-    <?php if ($proofFile['comment']): ?>
-    <div class="row comment-row" >
-        <div class="col-xs-12" style="padding:0;">
-            <div class="comment-box"><?php echo $proofFile['comment'] ?></div>
-        </div>  
-    </div>
-    <?php endif; ?>
+        </td>
+    </tr>
+    <?php 
+        $commentBoxVisibility = "display: none;";
+        $comment = "";
+        if ($proofFile['comment']) {
+            $commentBoxVisibility = "";
+            $comment = $proofFile['comment'];
+        }
+    ?>
+    <tr class="row comment-row <?php echo $proofFile['side']; ?>" style="border:none; <?php echo $commentBoxVisibility; ?>">
+        <td style="width:100%; padding:0;" colspan="5">
+            <div style="padding:0;">
+                <div class="comment-box"><?php echo $comment; ?></div>
+            </div>  
+        </td>
+    </tr>
+    
 <?php 
 // END FILE OUTPUT ///////////////////////////////////////////////////////////////
 } 
 ?>
-</div>
+</table>
+
 
 <?php do_action( 'woocommerce_before_order_itemmeta', $item_id, $item, $_product ) ?>
 

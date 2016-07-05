@@ -3,30 +3,18 @@
     <div class="row">
         <div class="col-md-2">
             Upload Link: 
-            <a href="<?php echo PROOF_DOMAIN_NAME; ?>/upload/10<?php echo $post->ID ?>" target="_blank">
-                <?php echo PROOF_DOMAIN_NAME; ?>/upload/10<?php echo $post->ID ?>
+            <a href="<?php echo PROOF_DOMAIN_NAME; ?>/upload/<?php echo $post->ID ?>" target="_blank">
+                <?php echo PROOF_DOMAIN_NAME; ?>/upload/<?php echo $post->ID ?>
             </a>
             <br><br>
-            <a href="<?php echo PROOF_DOMAIN_NAME; ?>/10<?php echo $post->ID ?>/preview/">File Previews</a>
+            <a href="<?php echo PROOF_DOMAIN_NAME; ?>/<?php echo $post->ID ?>/preview/">File Previews</a>
             &nbsp;&nbsp;
             <a class="pseudo history-view">Order history</a>
             <div class="history-list" style="">
                 <table class="history">
                 <?php foreach ($orderHistory as $historyEntry): ?>
-                <?php 
-                    $urcDate = new Datetime($historyEntry['created']);
-                    $gmtOffset = get_option('gmt_offset');
-                    $interval = new DateInterval('PT' . abs($gmtOffset) . "H");
-                    if ($gmtOffset < 0) {
-                        $urcDate->sub($interval);
-                    } else {
-                        $urcDate->add($interval);
-                    }
-                    
-                    $formattedDate = $urcDate->format('m/d h:i');
-                ?>
                 <tr style="">
-                    <td style="color:#999;"><?php echo $formattedDate; ?></td>
+                    <td style="color:#999;"><?php echo $historyEntry['created']; ?></td>
                     <td style="color:#333;"><?php echo $historyEntry['status'] ?></td>
                 </tr>
                 <?php endforeach; ?>
@@ -42,11 +30,11 @@
             </div>
         </div>
         <div class="col-md-2">
-            <button id="unlockform_<?php echo ($post->ID + 100000) ?>" data-action="<?php echo PROOF_DOMAIN_NAME; ?>/api/allowuploads/<?php echo ($post->ID + 100000) ?>" data-order="<?php echo $post->ID ?>" type="submit" class="btn btn-small btn-redirect proof-allow-uploads">Allow uploads</button>
+            <button id="unlockform_<?php echo ($post->ID) ?>" data-action="<?php echo PROOF_DOMAIN_NAME; ?>/api/allowuploads/<?php echo ($post->ID) ?>" data-order="<?php echo $post->ID ?>" type="submit" class="btn btn-small btn-redirect proof-allow-uploads">Allow uploads</button>
             <span class="allow-uploads loader-box"></span>
         </div>
         <div class="col-md-2">
-            <div id="approvalform_<?php echo ($post->ID + 100000) ?>" data-action="<?php echo PROOF_DOMAIN_NAME; ?>/api/approvalmail/<?php echo ($post->ID + 100000) ?>/" data-order="<?php echo $post->ID ?>">
+            <div id="approvalform_<?php echo ($post->ID) ?>" data-action="<?php echo PROOF_DOMAIN_NAME; ?>/api/approvalmail/<?php echo ($post->ID) ?>/" data-order="<?php echo $post->ID ?>">
                 <div class="pseudo-input nomail-val" data-value="0"></div>
                 <button class="btn btn-primary disabled btn-redirect proof-approval-mail">Send Approval Mail</button> &nbsp;<span class="approval-mail loader-box"></span>
                 <br>
