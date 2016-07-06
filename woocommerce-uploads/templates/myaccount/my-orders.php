@@ -65,7 +65,7 @@ if ( $customer_orders ) : ?>
                     $order = wc_get_order();
                 }
 
-				$order->populate( $customer_order );
+				$order = new WC_Order( $customer_order );
 
 				$item_count = $order->get_item_count();
 
