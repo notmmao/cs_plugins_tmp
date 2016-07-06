@@ -106,7 +106,7 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 				}
 
 				if ( $q >= $rule['from'] && $q <= $rule['to'] ) {
-					$this->discount_data['rule'] = $rule
+					$this->discount_data['rule'] = $rule;
 
 					$amount = apply_filters( 'woocommerce_dynamic_pricing_get_rule_amount', $rule['amount'], $rule, $cart_item, $this );
 					// $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );

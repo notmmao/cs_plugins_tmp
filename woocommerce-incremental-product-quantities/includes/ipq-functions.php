@@ -152,7 +152,8 @@ function wpbo_get_value_from_rule( $type, $product, $rule ) {
 	if ( $type != 'min' and 
 		 $type != 'max' and 
 		 $type != 'step' and 
-		 $type != 'all' and 
+ 		 $type != 'fixed_step' and
+ 		 $type != 'all' and 
 		 $type != 'priority' and 
 		 $type != 'role' and
 		 $type != 'min_oos' and
