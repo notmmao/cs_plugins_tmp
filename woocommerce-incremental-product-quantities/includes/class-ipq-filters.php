@@ -11,6 +11,7 @@ class IPQ_Filters {
 		add_filter( 'woocommerce_quantity_input_min', array( $this, 'input_min_value' ), 1, 2);
 		add_filter( 'woocommerce_quantity_input_max', array( $this, 'input_max_value' ), 1, 2);
 		add_filter( 'woocommerce_quantity_input_step', array( $this, 'input_step_value' ), 1, 2);
+		add_filter( 'woocommerce_quantity_input_fixed_step', array( $this, 'input_fixed_step_value' ), 1, 2);		
 		
 		// Product input box argument filter
 		add_filter( 'woocommerce_quantity_input_args', array( $this, 'input_set_all_values' ), 1, 2 );
@@ -99,6 +100,27 @@ class IPQ_Filters {
 	
 		// Return Value
 		if ( $step == '' or $step == null or (isset($step['step']) and $step['step'] == "")) {
+			return $default;
+		} else {
+			return $step;
+		}
+	}	
+	
+	public function input_fixed_step_value( $default, $product ) {
+		
+		// Return Defaults if it isn't a simple product
+		if( $product->product_type != 'simple' ) {
+			return $default;
+		}
+		
+		// Get Rule
+		$rule = wpbo_get_applied_rule( $product );
+		
+		// Get Value from Rule
+		$step = wpbo_get_value_from_rule( 'fixed_step', $product, $rule );
+	
+		// Return Value
+		if ( $step == '' or $step == null ) {
 			return $default;
 		} else {
 			return $step;

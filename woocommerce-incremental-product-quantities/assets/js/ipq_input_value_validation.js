@@ -18,8 +18,11 @@ jQuery(document).ready( function($) {
 		if ( min == '' || typeof min == 'undefined' ) 
 			min = 1;
 		
-		if ( step == '' || typeof step == 'undefined') 
-			step = 1;
+		if ( step == '' || typeof step == 'undefined') {
+			if ( fixed_step == '' || typeof step == 'undefined') {
+				step = 1;
+			}
+		}
 		
 		// Max Value Validation
 		if ( +new_qty > +max && max != '' ) {

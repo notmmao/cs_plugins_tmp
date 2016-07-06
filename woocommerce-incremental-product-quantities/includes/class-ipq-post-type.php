@@ -558,6 +558,10 @@ class IPQ_Quantity_Rule_Post_Type {
 			update_post_meta( $post_id, '_step', wpbo_validate_number( $_POST['step'] ) );
 		}
 		
+		if ( isset( $_POST['fixed_step'] ) ) {
+			update_post_meta( $post_id, '_fixed_step', $_POST['step'] );
+		}
+		
 		// Update Priority
 		if ( isset( $_POST['priority'] ) ) {
 			update_post_meta( $post_id, '_priority', wpbo_validate_number( $_POST['priority'] ) );

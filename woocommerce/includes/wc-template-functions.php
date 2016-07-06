@@ -1022,6 +1022,7 @@ if ( ! function_exists( 'woocommerce_quantity_input' ) ) {
 			'max_value'   => apply_filters( 'woocommerce_quantity_input_max', '', $product ),
 			'min_value'   => apply_filters( 'woocommerce_quantity_input_min', '', $product ),
 			'step'        => apply_filters( 'woocommerce_quantity_input_step', '1', $product ),
+			'fixed_step'	=> apply_filters( 'woocommerce_quantity_input_fixed_step', '1', $product ),
 			'pattern'     => apply_filters( 'woocommerce_quantity_input_pattern', has_filter( 'woocommerce_stock_amount', 'intval' ) ? '[0-9]*' : '' ),
 			'inputmode'   => apply_filters( 'woocommerce_quantity_input_inputmode', has_filter( 'woocommerce_stock_amount', 'intval' ) ? 'numeric' : '' ),
 		);

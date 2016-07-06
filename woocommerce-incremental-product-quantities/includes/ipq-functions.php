@@ -219,6 +219,10 @@ function wpbo_get_value_from_rule( $type, $product, $rule ) {
 			case 'min_oos':
 				return get_post_meta( $product->id, '_wpbo_minimum_oos', true );
 				break;
+				
+			case 'fixed_step':
+				return get_post_meta( $product->id, '_wpbo_fixed_step', true );
+				break;
 			
 			case 'max_oos':
 				return get_post_meta( $product->id, '_wpbo_maximum_oos', true );
