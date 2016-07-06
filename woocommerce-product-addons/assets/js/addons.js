@@ -83,7 +83,7 @@ jQuery(document).ready(function($) {
 						if ($(this).find('option:selected').data('price-percentage') == true) {
 							GlobalSizeCost = $(this).find('option:selected').data('price');
 							console.log("GLOBAL COST: " + GlobalSizeCost + "%");
-							GlobalSizeCost = Math.round(parseFloat(GlobalSizeCost / 100 * (product_price)) * 100) / 100;
+							GlobalSizeCost = parseFloat(GlobalSizeCost / 100 * (product_price));
 						};
 					}
 				}
@@ -147,7 +147,7 @@ jQuery(document).ready(function($) {
 						additionalCost = 0;
 					}
 					if (unit_addon_cost != 0) {
-						unit_addon_cost = Math.round(parseFloat(unit_addon_cost / 100 * (product_price + additionalCost)) * 100) / 100;
+						unit_addon_cost = parseFloat(unit_addon_cost / 100 * (product_price + additionalCost));
 						console.log('Option: ' + $(this).data('addon-name') + ",  " + unit_addon_cost);
 						console.log('Product price: ' + product_price);
 						console.log('Additional cost: ' + additionalCost);
