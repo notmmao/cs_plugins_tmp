@@ -294,7 +294,8 @@ class WC_Dynamic_Pricing_Simple_Membership extends WC_Dynamic_Pricing_Simple_Bas
 
 	private function get_adjusted_price_by_product_rule( $rule, $price, $_product ) {
 		$result = false;
-		$num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
+		// $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
+		$num_decimals = 4;
 
 		$q = 0;
 

@@ -26,7 +26,8 @@ class WC_Dynamic_Pricing_Advanced_Totals extends WC_Dynamic_Pricing_Advanced_Bas
 
 	public function adjust_cart($temp_cart) {
 		$q = $this->get_cart_total();
-		$num_decimals = apply_filters('woocommerce_dynamic_pricing_get_decimals', (int) get_option('woocommerce_price_num_decimals'));
+		// $num_decimals = apply_filters('woocommerce_dynamic_pricing_get_decimals', (int) get_option('woocommerce_price_num_decimals'));
+		$num_decimals = 4;
 
 		if ($this->adjustment_sets && count($this->adjustment_sets)) {
 			foreach ($this->adjustment_sets as $set_id => $set) {

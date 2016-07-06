@@ -106,7 +106,8 @@ class WC_Dynamic_Pricing_Simple_Group extends WC_Dynamic_Pricing_Simple_Base {
 
 	private function get_adjusted_price($rule, $price) {
 		$result = $price;
-		$num_decimals = apply_filters('woocommerce_dynamic_pricing_get_decimals', (int) get_option('woocommerce_price_num_decimals'));
+		// $num_decimals = apply_filters('woocommerce_dynamic_pricing_get_decimals', (int) get_option('woocommerce_price_num_decimals'));
+		$num_decimals = 4;
 
 		switch ($rule['type']) {
 			case 'fixed_product':

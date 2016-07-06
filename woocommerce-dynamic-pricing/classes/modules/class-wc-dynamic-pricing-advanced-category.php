@@ -246,7 +246,11 @@ class WC_Dynamic_Pricing_Advanced_Category extends WC_Dynamic_Pricing_Advanced_B
 		if ($a > $cart_item['quantity']) {
 			$a = $cart_item['quantity'];
 		}
-		$num_decimals = apply_filters('woocommerce_dynamic_pricing_get_decimals', (int) get_option('woocommerce_price_num_decimals'));
+		
+		// $num_decimals = apply_filters('woocommerce_dynamic_pricing_get_decimals', (int) get_option('woocommerce_price_num_decimals'));
+		// NOTE(stas) : This is done to increase precision for addons calculation but still show prices with only 2 decimals;
+		$num_decimals = 4;
+		
 		switch ($rule['type']) {
 			case 'fixed_adjustment':
 				$adjusted = floatval($price) - floatval($rule['amount']);
@@ -300,8 +304,10 @@ class WC_Dynamic_Pricing_Advanced_Category extends WC_Dynamic_Pricing_Advanced_B
 
 	protected function get_bulk_adjusted_price($cart_item, $price, $rule, $q) {
 		$result = false;
-		$num_decimals = apply_filters('woocommerce_dynamic_pricing_get_decimals', (int) get_option('woocommerce_price_num_decimals'));
+		// NOTE(stas) : This is done to increase precision for addons calculation but still show prices with only 2 decimals;
+        // $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
 
+        $num_decimals = 4;
 
 		if ($rule['from'] == '*') {
 			$rule['from'] = 0;
