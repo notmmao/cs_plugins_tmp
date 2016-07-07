@@ -1,26 +1,29 @@
 <?php
+
 class woocommerce_category_pricing_rules_admin {
+
 	public function __construct() {
-		add_action('init', array(&$this, 'on_init'));
-		add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'), 100);
+		add_action( 'init', array(&$this, 'on_init') );
+		add_action( 'admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'), 100 );
 	}
 
 	public function on_init() {
-		wp_enqueue_script('jquery-ui-sortable');
+		wp_enqueue_script( 'jquery-ui-sortable' );
 	}
 
-	public function admin_enqueue_scripts($hook) {
+	public function admin_enqueue_scripts( $hook ) {
 		global $woocommerce;
-		if ($hook == 'woocommerce_page_wc_dynamic_pricing') {
-			wp_enqueue_script('woocommerce_admin');
-			wp_enqueue_style('woocommerce_admin_styles', $woocommerce->plugin_url() . '/assets/css/admin.css');
+		if ( $hook == 'woocommerce_page_wc_dynamic_pricing' ) {
+			wp_enqueue_script( 'woocommerce_admin' );
+			wp_enqueue_style( 'woocommerce_admin_styles', $woocommerce->plugin_url() . '/assets/css/admin.css' );
 		}
 	}
 
-	private function get_description($key) {
+	private function get_description( $key ) {
 		global $woocommerce;
 
 		$tips = array(
+		    'title' => __( 'A title for this rule set to indentify it in the dashboard', 'wc_pricing' ),
 		    'purchase' => 'The quantity the user must purchase at full price',
 		    'receive' => 'The quantity the user will receive at the discount',
 		    'type' => 'The type of discount to apply',
@@ -32,7 +35,7 @@ class woocommerce_category_pricing_rules_admin {
 		    'mode' => 'Bulk rules allow you to configure a bulk discount based on specific quantities the user purchases, such as buy 5 items receive a 10% discount.  Special offers allow you to configure rules such as buy one get one free.'
 		);
 
-		echo '<img class="help_tip" data-tip="' . esc_attr($tips[$key]) . '" src="' . $woocommerce->plugin_url() . '/assets/images/help.png" height="16" width="16" />';
+		echo '<img class="help_tip" data-tip="' . esc_attr( $tips[$key] ) . '" src="' . $woocommerce->plugin_url() . '/assets/images/help.png" height="16" width="16" />';
 	}
 
 	public function basic_meta_box() {
@@ -40,13 +43,13 @@ class woocommerce_category_pricing_rules_admin {
 		<div id="poststuff" class="woocommerce-category-wrap">
 			<?php settings_errors(); ?>
 			<form method="post" action="options.php">
-				
-				<?php settings_fields('_s_category_pricing_rules'); ?>
-				
-				<?php $pricing_rules = get_option('_s_category_pricing_rules'); ?>
 
-				<?php $terms = get_terms('product_cat', array('hierarchical' => false, 'hide_empty' => false, 'parent' => 0)); ?>
-				<?php if (!is_wp_error($terms) && !empty($terms)) : ?>
+				<?php settings_fields( '_s_category_pricing_rules' ); ?>
+
+				<?php $pricing_rules = get_option( '_s_category_pricing_rules' ); ?>
+
+				<?php $terms = get_terms( 'product_cat', array('hierarchical' => false, 'hide_empty' => false, 'parent' => 0) ); ?>
+				<?php if ( !is_wp_error( $terms ) && !empty( $terms ) ) : ?>
 					<table class="widefat">
 						<thead>
 						<th>Enabled</th>
@@ -63,24 +66,24 @@ class woocommerce_category_pricing_rules_admin {
 
 						</thead>
 						<tbody>
-							<?php $this->basic_meta_box_term_group($pricing_rules, $terms); ?>
+							<?php $this->basic_meta_box_term_group( $pricing_rules, $terms ); ?>
 						</tbody>
 					</table>
 					<p class="submit">
-						<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ) ?>" />
 					</p>
 				<?php else : ?>
-					<?php _e('You need to create product categories first', 'wc_pricing'); ?>
+					<?php _e( 'You need to create product categories first', 'wc_pricing' ); ?>
 				<?php endif; ?>
 			</form>
 		</div>
 		<?php
 	}
 
-	public function basic_meta_box_term_group($pricing_rules, $terms, $parent = false, $indent = 0) {
+	public function basic_meta_box_term_group( $pricing_rules, $terms, $parent = false, $indent = 0 ) {
 		$default = array('type' => 'percent', 'direction' => '+', 'amount' => '', 'free_shipping' => 'no');
 
-		foreach ($terms as $item_id => $item) :
+		foreach ( $terms as $item_id => $item ) :
 			?>
 			<?php
 			$set_index = $item->term_id;
@@ -89,11 +92,11 @@ class woocommerce_category_pricing_rules_admin {
 			$condition_index = 0;
 			$index = 0;
 
-			$rule_set = (isset($pricing_rules[$name])) ? $pricing_rules[$name] : array();
-			$rule = isset($pricing_rules[$name]) && isset($pricing_rules[$name]['rules'][0]) ? $pricing_rules[$name]['rules'][0] : array();
-			$rule = array_merge($default, $rule);
+			$rule_set = (isset( $pricing_rules[$name] )) ? $pricing_rules[$name] : array();
+			$rule = isset( $pricing_rules[$name] ) && isset( $pricing_rules[$name]['rules'][0] ) ? $pricing_rules[$name]['rules'][0] : array();
+			$rule = array_merge( $default, $rule );
 			?>
-			<?php $checked = isset($rule_set['collector']['args']['cats']) && in_array($item->term_id, $rule_set['collector']['args']['cats']) ? 'checked="checked"' : ''; ?>
+			<?php $checked = isset( $rule_set['collector']['args']['cats'] ) && in_array( $item->term_id, $rule_set['collector']['args']['cats'] ) ? 'checked="checked"' : ''; ?>
 			<tr>
 				<td>
 					<input type="hidden" name="pricing_rules[<?php echo $name; ?>][conditions_type]" value="all" />
@@ -103,31 +106,31 @@ class woocommerce_category_pricing_rules_admin {
 					<input class="checkbox" <?php echo $checked; ?> type="checkbox" id="item_<?php echo $item->term_id; ?>" name="pricing_rules[<?php echo $name; ?>][collector][args][cats][]" value="<?php echo $item->term_id; ?>" />
 				</td>
 				<td>
-					<?php if ($item->parent) : ?>
-						<strong><?php echo str_repeat( '&#8212; ', $indent) . $item->name; ?></strong>
+					<?php if ( $item->parent ) : ?>
+						<strong><?php echo str_repeat( '&#8212; ', $indent ) . $item->name; ?></strong>
 					<?php else : ?>
 						<strong><?php echo $item->name; ?></strong>
 					<?php endif; ?>
 				</td>
 				<td style="display:none;">
-					<input <?php checked('yes', $rule['free_shipping']); ?> type="checkbox" name="pricing_rules[<?php echo $name; ?>][rules][<?php echo $index; ?>][free_shipping]" value="yes" />
+					<input <?php checked( 'yes', $rule['free_shipping'] ); ?> type="checkbox" name="pricing_rules[<?php echo $name; ?>][rules][<?php echo $index; ?>][free_shipping]" value="yes" />
 				</td>
 				<td>
 					<select id="pricing_rule_type_value_<?php echo $name . '_' . $index; ?>" name="pricing_rules[<?php echo $name; ?>][rules][<?php echo $index; ?>][type]">
-						<option <?php $this->selected('true', empty($checked)); ?>></option>
-						<option <?php $this->selected('fixed_product', $rule['type']); ?> value="fixed_product">Price Discount</option>
-						<option <?php $this->selected('percent_product', $rule['type']); ?> value="percent_product">Percentage Discount</option>
+						<option <?php $this->selected( 'true', empty( $checked ) ); ?>></option>
+						<option <?php $this->selected( 'fixed_product', $rule['type'] ); ?> value="fixed_product">Price Discount</option>
+						<option <?php $this->selected( 'percent_product', $rule['type'] ); ?> value="percent_product">Percentage Discount</option>
 					</select>
 				</td>
 				<td>
-					<input type="text" name="pricing_rules[<?php echo $name; ?>][rules][<?php echo $index; ?>][amount]" value="<?php echo esc_attr($rule['amount']); ?>" />
+					<input type="text" name="pricing_rules[<?php echo $name; ?>][rules][<?php echo $index; ?>][amount]" value="<?php echo esc_attr( $rule['amount'] ); ?>" />
 				</td>
 
 			</tr>
 
-			<?php $child_terms = get_terms('product_cat', array('hierarchical' => false, 'hide_empty' => false, 'parent' => $item->term_id)); ?>
-			<?php if (!is_wp_error($child_terms) && !empty($child_terms)) : ?>
-				<?php $this->basic_meta_box_term_group($pricing_rules, $child_terms, $item, $indent + 1 ); ?>
+			<?php $child_terms = get_terms( 'product_cat', array('hierarchical' => false, 'hide_empty' => false, 'parent' => $item->term_id) ); ?>
+			<?php if ( !is_wp_error( $child_terms ) && !empty( $child_terms ) ) : ?>
+				<?php $this->basic_meta_box_term_group( $pricing_rules, $child_terms, $item, $indent + 1 ); ?>
 			<?php endif; ?>
 		<?php endforeach; ?>   
 		<?php
@@ -137,60 +140,65 @@ class woocommerce_category_pricing_rules_admin {
 		?>
 		<div id="woocommerce-pricing-category">
 			<?php settings_errors(); ?>
-			<h3><span><?php _e('Advanced Rules', 'wc_pricing'); ?></span></h3>
+			<h3><span><?php _e( 'Advanced Rules', 'wc_pricing' ); ?></span></h3>
 
 			<form method="post" action="options.php">
-				<?php settings_fields('_a_category_pricing_rules'); ?>
-				<?php $terms = get_terms('product_cat', array('get' => 'all')); ?>
-				<?php if (!empty($terms) && !is_wp_error($terms)): ?>
-					<?php $pricing_rule_sets = get_option('_a_category_pricing_rules', array()); ?>
-					<div id="woocommerce-pricing-rules-wrap" class="inside" data-setindex="<?php echo count($pricing_rule_sets); ?>">
+				<?php settings_fields( '_a_category_pricing_rules' ); ?>
+				<?php $terms = get_terms( 'product_cat', array('get' => 'all') ); ?>
+				<?php if ( !empty( $terms ) && !is_wp_error( $terms ) ): ?>
+					<?php $pricing_rule_sets = get_option( '_a_category_pricing_rules', array() ); ?>
+					<div id="woocommerce-pricing-rules-wrap" class="inside" data-setindex="<?php echo count( $pricing_rule_sets ); ?>">
 						<?php $this->meta_box_javascript(); ?>
 						<?php $this->meta_box_css(); ?>  
-						<?php if ($pricing_rule_sets && is_array($pricing_rule_sets) && sizeof($pricing_rule_sets) > 0) : ?>
-							<?php $this->create_rulesets($pricing_rule_sets); ?>
+						<?php if ( $pricing_rule_sets && is_array( $pricing_rule_sets ) && sizeof( $pricing_rule_sets ) > 0 ) : ?>
+							<?php $this->create_rulesets( $pricing_rule_sets ); ?>
 						<?php endif; ?>        
 					</div>   
 					<button id="woocommerce-pricing-add-ruleset" type="button" class="button button-secondary">+ Add Category Pricing</button>
 					<p class="submit" style="float:right;">
-						<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ) ?>" />
 					</p>
 				<?php else : ?>
-					<?php _e('You need to create product categories first', 'wc_pricing'); ?>
+					<?php _e( 'You need to create product categories first', 'wc_pricing' ); ?>
 				<?php endif; ?>
 			</form>
 			<?php
 		}
 
-		public function create_rulesets($pricing_rule_sets) {
+		public function create_rulesets( $pricing_rule_sets ) {
 
 
-			foreach ($pricing_rule_sets as $name => $pricing_rule_set) {
-				$pricing_rules = isset($pricing_rule_set['rules']) ? $pricing_rule_set['rules'] : null;
-				$block_pricing_rules = isset($pricing_rule_set['blockrules']) ? $pricing_rule_set['blockrules'] : null;
+			foreach ( $pricing_rule_sets as $name => $pricing_rule_set ) {
+				$pricing_rules = isset( $pricing_rule_set['rules'] ) ? $pricing_rule_set['rules'] : null;
+				$block_pricing_rules = isset( $pricing_rule_set['blockrules'] ) ? $pricing_rule_set['blockrules'] : null;
 
-				$pricing_conditions = isset($pricing_rule_set['conditions']) ? $pricing_rule_set['conditions'] : null;
-				$collector = isset($pricing_rule_set['collector']) ? $pricing_rule_set['collector'] : null;
-				$targets = isset($pricing_rule_set['targets']) ? $pricing_rule_set['targets'] : null;
+				$pricing_conditions = isset( $pricing_rule_set['conditions'] ) ? $pricing_rule_set['conditions'] : null;
+				$collector = isset( $pricing_rule_set['collector'] ) ? $pricing_rule_set['collector'] : null;
+				$targets = isset( $pricing_rule_set['targets'] ) ? $pricing_rule_set['targets'] : null;
 
-				$mode = isset($pricing_rule_set['mode']) ? $pricing_rule_set['mode'] : 'continuous';
+				$mode = isset( $pricing_rule_set['mode'] ) ? $pricing_rule_set['mode'] : 'continuous';
 
-				$date_from = isset($pricing_rule_set['date_from']) ? $pricing_rule_set['date_from'] : '';
-				$date_to = isset($pricing_rule_set['date_to']) ? $pricing_rule_set['date_to'] : '';
+				$date_from = isset( $pricing_rule_set['date_from'] ) ? $pricing_rule_set['date_from'] : '';
+				$date_to = isset( $pricing_rule_set['date_to'] ) ? $pricing_rule_set['date_to'] : '';
 
-				$invalid = isset($pricing_rule_set['invalid']);
+				$invalid = isset( $pricing_rule_set['invalid'] );
 				$validation_class = $invalid ? 'invalid' : '';
 				?>
 				<div id="woocommerce-pricing-ruleset-<?php echo $name; ?>" class="woocommerce_pricing_ruleset <?php echo $validation_class; ?>">
-					<h4 class="first">Category Pricing<a href="#" data-name="<?php echo $name; ?>" class="delete_pricing_ruleset" ><img  src="<?php echo WC_Dynamic_Pricing::plugin_url(); ?>/assets/images/delete.png" title="delete this set" alt="delete this set" style="cursor:pointer; margin:0 3px;float:right;" /></a></h4>    
-
+					<h4 class="first"><?php echo (isset( $pricing_rule_set['admin_title'] ) && !empty( $pricing_rule_set['admin_title'] ) ? esc_attr( $pricing_rule_set['admin_title'] ) : __( 'Category Pricing', 'wc_pricing' )); ?><a href="#" data-name="<?php echo $name; ?>" class="delete_pricing_ruleset" ><img  src="<?php echo WC_Dynamic_Pricing::plugin_url(); ?>/assets/images/delete.png" title="delete this set" alt="delete this set" style="cursor:pointer; margin:0 3px;float:right;" /></a></h4>    
+					<div>
+						<p>
+							<label for="pricing_rule_admin_title_<?php echo $name; ?>"><?php _e( 'Admin Title', 'wc_pricing' ); ?>:</label><?php $this->get_description( 'title' ); ?>
+							<input type="text" name="pricing_rules[<?php echo $name; ?>][admin_title]" value="<?php echo (isset( $pricing_rule_set['admin_title'] ) ? esc_attr( $pricing_rule_set['admin_title'] ) : ''); ?>" />
+						</p>
+					</div>
 					<div id="woocommerce-pricing-collector-<?php echo $name; ?>" class="section" style="" >
 						<?php
-						if (is_array($collector) && count($collector) > 0) {
-							$this->create_collector($collector, $name);
+						if ( is_array( $collector ) && count( $collector ) > 0 ) {
+							$this->create_collector( $collector, $name );
 						} else {
 							$product_cats = array();
-							$this->create_collector(array('type' => 'cat', 'args' => array('cats' => $product_cats)), $name);
+							$this->create_collector( array('type' => 'cat', 'args' => array('cats' => $product_cats)), $name );
 						}
 						?>
 					</div>
@@ -198,51 +206,51 @@ class woocommerce_category_pricing_rules_admin {
 					<div id="woocommerce-pricing-conditions-<?php echo $name; ?>" class="section">
 						<?php
 						$condition_index = 0;
-						if (is_array($pricing_conditions) && sizeof($pricing_conditions) > 0):
+						if ( is_array( $pricing_conditions ) && sizeof( $pricing_conditions ) > 0 ):
 							?>
 							<input type="hidden" name="pricing_rules[<?php echo $name; ?>][conditions_type]" value="all" />
 							<?php
-							foreach ($pricing_conditions as $condition) :
+							foreach ( $pricing_conditions as $condition ) :
 								$condition_index++;
-								$this->create_condition($condition, $name, $condition_index);
+								$this->create_condition( $condition, $name, $condition_index );
 							endforeach;
 						else :
 							?>
 							<input type="hidden" name="pricing_rules[<?php echo $name; ?>][conditions_type]" value="all" />
 							<?php
-							$this->create_condition(array('type' => 'apply_to', 'args' => array('applies_to' => 'everyone', 'roles' => array('customer'))), $name, 1);
+							$this->create_condition( array('type' => 'apply_to', 'args' => array('applies_to' => 'everyone', 'roles' => array('customer'))), $name, 1 );
 						endif;
 						?>
 					</div>
 
 					<div id="woocommerce-pricing-mode-<?php echo $name; ?>" class="section">
-						<label for="pricing_ruleset_mode_value_<?php echo $name . '_0'; ?>"><?php _e('Rule Processing Mode', 'wc_pricing'); ?></label><?php $this->get_description('mode'); ?>
+						<label for="pricing_ruleset_mode_value_<?php echo $name . '_0'; ?>"><?php _e( 'Rule Processing Mode', 'wc_pricing' ); ?></label><?php $this->get_description( 'mode' ); ?>
 						<select id="pricing_ruleset_mode_value_<?php echo $name . '_0'; ?>" name="pricing_rules[<?php echo $name; ?>][mode]" class="pricing_rule_mode">
-							<option <?php selected('continuous', $mode); ?> value="continuous"><?php _e('Bulk', 'wc_pricing'); ?></option>
-							<option <?php selected('block', $mode); ?> value="block"><?php _e('Special Offer', 'wc_pricing'); ?></option>
+							<option <?php selected( 'continuous', $mode ); ?> value="continuous"><?php _e( 'Bulk', 'wc_pricing' ); ?></option>
+							<option <?php selected( 'block', $mode ); ?> value="block"><?php _e( 'Special Offer', 'wc_pricing' ); ?></option>
 						</select>
 					</div>
 
 					<div id="woocommerce-pricing-targets-<?php echo $name; ?>" class="section" style="" >
 						<?php
-						if (is_array($targets) && count($targets) > 0) {
-							$this->create_target_selector($targets, $name);
+						if ( is_array( $targets ) && count( $targets ) > 0 ) {
+							$this->create_target_selector( $targets, $name );
 						} else {
 							$product_cats = array();
-							$this->create_target_selector(array(), $name);
+							$this->create_target_selector( array(), $name );
 						}
 						?>
 					</div>
 
 					<div id="woocommerce-pricing-dates-<?php echo $name; ?>" class="section pricing-rule-date-fields">
-						<label for="pricing_ruleset_dates_value_<?php echo $name . '_date_from'; ?>"><?php _e('Dates', 'wc_pricing'); ?></label>
-						<input value="<?php echo $date_from; ?>" type="text" class="short date_from" title="<?php _e('Leave both fields blank to not restrict this pricing group to a date range', 'wc_pricing'); ?>" name="pricing_rules[<?php echo $name; ?>][date_from]" id="pricing_ruleset_dates_value_<?php echo $name . '_date_from'; ?>" value="" placeholder="<?php echo _x('From&hellip;', 'placeholder', 'woocommerce') ?> YYYY-MM-DD" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
-						<input value="<?php echo $date_to; ?>" type="text" class="short date_to" title="<?php _e('Leave both fields blank to not restrict this pricing group to a date range', 'wc_pricing'); ?>" name="pricing_rules[<?php echo $name; ?>][date_to]" id="pricing_ruleset_dates_value_<?php echo $name . '_date_to'; ?>" value="" placeholder="<?php echo _x('To&hellip;', 'placeholder', 'woocommerce'); ?> YYYY-MM-DD" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						<label for="pricing_ruleset_dates_value_<?php echo $name . '_date_from'; ?>"><?php _e( 'Dates', 'wc_pricing' ); ?></label>
+						<input value="<?php echo $date_from; ?>" type="text" class="short date_from" title="<?php _e( 'Leave both fields blank to not restrict this pricing group to a date range', 'wc_pricing' ); ?>" name="pricing_rules[<?php echo $name; ?>][date_from]" id="pricing_ruleset_dates_value_<?php echo $name . '_date_from'; ?>" value="" placeholder="<?php echo _x( 'From&hellip;', 'placeholder', 'woocommerce' ) ?> YYYY-MM-DD" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						<input value="<?php echo $date_to; ?>" type="text" class="short date_to" title="<?php _e( 'Leave both fields blank to not restrict this pricing group to a date range', 'wc_pricing' ); ?>" name="pricing_rules[<?php echo $name; ?>][date_to]" id="pricing_ruleset_dates_value_<?php echo $name . '_date_to'; ?>" value="" placeholder="<?php echo _x( 'To&hellip;', 'placeholder', 'woocommerce' ); ?> YYYY-MM-DD" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
 						<div class="clear"></div>
 					</div>
 
 					<script type="text/javascript">
-						jQuery(document).ready(function($) {
+						jQuery(document).ready(function ($) {
 							// DATE PICKER FIELDS
 							$(".pricing-rule-date-fields input:not(.hasDatepicker)").datepicker({
 								defaultDate: "",
@@ -252,14 +260,14 @@ class woocommerce_category_pricing_rules_admin {
 								showOn: "button",
 								buttonImage: woocommerce_pricing_admin.calendar_image,
 								buttonImageOnly: true,
-								onSelect: function(selectedDate) {
+								onSelect: function (selectedDate) {
 									var option = $(this).is('.date_from') ? "minDate" : "maxDate";
 
 									var instance = $(this).data("datepicker"),
 										date = $.datepicker.parseDate(
-										instance.settings.dateFormat ||
-										$.datepicker._defaults.dateFormat,
-										selectedDate, instance.settings);
+											instance.settings.dateFormat ||
+											$.datepicker._defaults.dateFormat,
+											selectedDate, instance.settings);
 
 									var dates = $(this).parents('.pricing-rule-date-fields').find('input');
 									dates.not(this).datepicker("option", option, date);
@@ -269,35 +277,35 @@ class woocommerce_category_pricing_rules_admin {
 					</script>
 
 					<div class="section" style="display:<?php echo ($mode == 'block' ? 'block' : 'none;'); ?>">
-						<table  id="woocommerce-pricing-blockrules-table-<?php echo $name; ?>" class="block" data-lastindex="<?php echo (is_array($pricing_rules) && sizeof($pricing_rules) > 0) ? count($pricing_rules) : '1'; ?>">
+						<table  id="woocommerce-pricing-blockrules-table-<?php echo $name; ?>" class="block" data-lastindex="<?php echo (is_array( $pricing_rules ) && sizeof( $pricing_rules ) > 0) ? count( $pricing_rules ) : '1'; ?>">
 							<thead>
 							<th>
-								<?php _e('Purchase', 'wc_pricing'); ?><?php $this->get_description('purchase'); ?>
+								<?php _e( 'Purchase', 'wc_pricing' ); ?><?php $this->get_description( 'purchase' ); ?>
 							</th>
 							<th>
-								<?php _e('Receive', 'wc_pricing'); ?><?php $this->get_description('receive'); ?>
+								<?php _e( 'Receive', 'wc_pricing' ); ?><?php $this->get_description( 'receive' ); ?>
 							</th>
 							<th>
-								<?php _e('Discount Type', 'wc_pricing'); ?><?php $this->get_description('type'); ?>
+								<?php _e( 'Discount Type', 'wc_pricing' ); ?><?php $this->get_description( 'type' ); ?>
 							</th>
 							<th>
-								<?php _e('Discount Amount', 'wc_pricing'); ?><?php $this->get_description('amount'); ?>
+								<?php _e( 'Discount Amount', 'wc_pricing' ); ?><?php $this->get_description( 'amount' ); ?>
 							</th>
 							<th>
-								<?php _e('Repeating', 'wc_pricing'); ?><?php $this->get_description('repeating'); ?>
+								<?php _e( 'Repeating', 'wc_pricing' ); ?><?php $this->get_description( 'repeating' ); ?>
 							</th>
 
 							</thead>
 							<tbody>
 								<?php
 								$index = 0;
-								if (is_array($block_pricing_rules) && sizeof($block_pricing_rules) > 0) {
-									foreach ($block_pricing_rules as $rule) {
+								if ( is_array( $block_pricing_rules ) && sizeof( $block_pricing_rules ) > 0 ) {
+									foreach ( $block_pricing_rules as $rule ) {
 										$index++;
-										$this->get_block_row($rule, $name, $index, count($block_pricing_rules));
+										$this->get_block_row( $rule, $name, $index, count( $block_pricing_rules ) );
 									}
 								} else {
-									$this->get_block_row(array('adjust' => '', 'from' => '', 'amount' => '', 'type' => '', 'repeating' => 'no'), $name, 1, 1);
+									$this->get_block_row( array('adjust' => '', 'from' => '', 'amount' => '', 'type' => '', 'repeating' => 'no'), $name, 1, 1 );
 								}
 								?>
 							</tbody>
@@ -308,32 +316,32 @@ class woocommerce_category_pricing_rules_admin {
 
 					<div id="woocommerce-pricing-rules-continuous-section-<?php echo $name; ?>" class="section" style="display:<?php echo $mode == 'continuous' ? 'block;' : 'none;'; ?>">
 						<label>Quantity Pricing</label>
-						<table id="woocommerce-pricing-rules-table-<?php echo $name; ?>" class="continuous" data-lastindex="<?php echo (is_array($pricing_rules) && sizeof($pricing_rules) > 0) ? count($pricing_rules) : '1'; ?>">
+						<table id="woocommerce-pricing-rules-table-<?php echo $name; ?>" class="continuous" data-lastindex="<?php echo (is_array( $pricing_rules ) && sizeof( $pricing_rules ) > 0) ? count( $pricing_rules ) : '1'; ?>">
 							<thead>
 							<th>
-								<?php _e('Minimum Quantity', 'wc_pricing'); ?>
+								<?php _e( 'Minimum Quantity', 'wc_pricing' ); ?>
 							</th>
 							<th>
-								<?php _e('Max Quantity', 'wc_pricing'); ?>
+								<?php _e( 'Max Quantity', 'wc_pricing' ); ?>
 							</th>
 							<th>
-								<?php _e('Type', 'wc_pricing'); ?>
+								<?php _e( 'Type', 'wc_pricing' ); ?>
 							</th>
 							<th>
-								<?php _e('Amount', 'wc_pricing'); ?>
+								<?php _e( 'Amount', 'wc_pricing' ); ?>
 							</th>
 							<th>&nbsp;</th>
 							</thead>
 							<tbody>
 								<?php
 								$index = 0;
-								if (is_array($pricing_rules) && sizeof($pricing_rules) > 0) {
-									foreach ($pricing_rules as $rule) {
+								if ( is_array( $pricing_rules ) && sizeof( $pricing_rules ) > 0 ) {
+									foreach ( $pricing_rules as $rule ) {
 										$index++;
-										$this->get_row($rule, $name, $index);
+										$this->get_row( $rule, $name, $index );
 									}
 								} else {
-									$this->get_row(array('to' => '', 'from' => '', 'amount' => '', 'type' => ''), $name, 1);
+									$this->get_row( array('to' => '', 'from' => '', 'amount' => '', 'type' => ''), $name, 1 );
 								}
 								?>
 							</tbody>
@@ -345,27 +353,27 @@ class woocommerce_category_pricing_rules_admin {
 			}
 		}
 
-		public function create_empty_ruleset($set_index) {
+		public function create_empty_ruleset( $set_index ) {
 			$pricing_rule_sets = array();
 			$pricing_rule_sets['set_' . $set_index] = array();
 			$pricing_rule_sets['set_' . $set_index]['title'] = 'Rule Set ' . $set_index;
 			$pricing_rule_sets['set_' . $set_index]['rules'] = array();
-			$this->create_rulesets($pricing_rule_sets);
+			$this->create_rulesets( $pricing_rule_sets );
 		}
 
-		private function create_condition($condition, $name, $condition_index) {
+		private function create_condition( $condition, $name, $condition_index ) {
 			global $wp_roles;
-			switch ($condition['type']) {
+			switch ( $condition['type'] ) {
 				case 'apply_to':
-					$this->create_condition_apply_to($condition, $name, $condition_index);
+					$this->create_condition_apply_to( $condition, $name, $condition_index );
 					break;
 				default:
 					break;
 			}
 		}
 
-		private function create_condition_apply_to($condition, $name, $condition_index) {
-			if (!isset($wp_roles)) {
+		private function create_condition_apply_to( $condition, $name, $condition_index ) {
+			if ( !isset( $wp_roles ) ) {
 				$wp_roles = new WP_Roles();
 			}
 			$all_roles = $wp_roles->roles;
@@ -373,21 +381,22 @@ class woocommerce_category_pricing_rules_admin {
 			?>
 
 			<div>
-				<label for="pricing_rule_apply_to_<?php echo $name . '_' . $condition_index; ?>">Applies To:</label><?php $this->get_description('apply_to'); ?>
+				<label for="pricing_rule_apply_to_<?php echo $name . '_' . $condition_index; ?>"><?php _e('Applies To:', 'wc_pricing'); ?></label><?php $this->get_description( 'apply_to' ); ?>
 				<input type="hidden" name="pricing_rules[<?php echo $name; ?>][conditions][<?php echo $condition_index; ?>][type]" value="apply_to" />
 
 				<select class="pricing_rule_apply_to" id="pricing_rule_apply_to_<?php echo $name . '_' . $condition_index; ?>" name="pricing_rules[<?php echo $name; ?>][conditions][<?php echo $condition_index; ?>][args][applies_to]">
-					<option <?php selected('everyone', $condition['args']['applies_to']); ?> value="everyone">Everyone</option>
-					<option <?php selected('roles', $condition['args']['applies_to']); ?> value="roles">Specific Roles</option>
-					<?php do_action('woocommerce_dynamic_pricing_applies_to_options', 'advanced_category', $condition, $name, $condition_index); ?>
+					<option <?php selected( 'everyone', $condition['args']['applies_to'] ); ?> value="everyone"><?php _e( 'Everyone', 'wc_pricing' ); ?></option>
+					<option <?php selected( 'unauthenticated', $condition['args']['applies_to'] ); ?> value="unauthenticated"><?php _e( 'Guests', 'wc_pricing' ); ?></option>
+					<option <?php selected( 'roles', $condition['args']['applies_to'] ); ?> value="roles"><?php _e( 'Specific Roles', 'wc_pricing' ); ?></option>
+					<?php do_action( 'woocommerce_dynamic_pricing_applies_to_options', 'advanced_category', $condition, $name, $condition_index ); ?>
 				</select>
 
 				<div class="roles" style="<?php echo $div_style; ?>">
-					<?php $chunks = array_chunk($all_roles, ceil(count($all_roles) / 3), true); ?>
-					<?php foreach ($chunks as $chunk) : ?>
+					<?php $chunks = array_chunk( $all_roles, ceil( count( $all_roles ) / 3 ), true ); ?>
+					<?php foreach ( $chunks as $chunk ) : ?>
 						<ul class="list-column">        
-							<?php foreach ($chunk as $role_id => $role) : ?>
-								<?php $role_checked = (isset($condition['args']['roles']) && is_array($condition['args']['roles']) && in_array($role_id, $condition['args']['roles'])) ? 'checked="checked"' : ''; ?>
+							<?php foreach ( $chunk as $role_id => $role ) : ?>
+								<?php $role_checked = (isset( $condition['args']['roles'] ) && is_array( $condition['args']['roles'] ) && in_array( $role_id, $condition['args']['roles'] )) ? 'checked="checked"' : ''; ?>
 								<li>
 									<label for="<?php echo $name; ?>_role_<?php echo $role_id; ?>" class="selectit">
 										<input <?php echo $role_checked; ?> type="checkbox" id="<?php echo $name; ?>_role_<?php echo $role_id; ?>" name="pricing_rules[<?php echo $name; ?>][conditions][<?php echo $condition_index; ?>][args][roles][]" value="<?php echo $role_id; ?>" /><?php echo $role['name']; ?>
@@ -398,29 +407,29 @@ class woocommerce_category_pricing_rules_admin {
 					<?php endforeach; ?>
 				</div>
 
-				<?php do_action('woocommerce_dynamic_pricing_applies_to_selectors', 'advanced_category', $condition, $name, $condition_index); ?>
+				<?php do_action( 'woocommerce_dynamic_pricing_applies_to_selectors', 'advanced_category', $condition, $name, $condition_index ); ?>
 
 				<div style="clear:both;"></div>
 			</div>
 			<?php
 		}
 
-		private function create_collector($collector, $name) {
-			$terms = (array) get_terms('product_cat', array('get' => 'all'));
+		private function create_collector( $collector, $name ) {
+			$terms = (array) get_terms( 'product_cat', array('get' => 'all') );
 			?>
-			<label for="pricing_rule_when_<?php echo $name; ?>"><?php _e('Quantities based on:', 'wc_pricing'); ?></label><?php $this->get_description('source'); ?>
+			<label for="pricing_rule_when_<?php echo $name; ?>"><?php _e( 'Quantities based on:', 'wc_pricing' ); ?></label><?php $this->get_description( 'source' ); ?>
 			<select title="Choose how to calculate the quantity.  This tallied amount is used in determining the min and max quantities used below in the Quantity Pricing section." class="pricing_rule_when" id="pricing_rule_when_<?php echo $name; ?>" name="pricing_rules[<?php echo $name; ?>][collector][type]">
-				<option title="Calculate quantity based on cart item quantity" <?php selected('cat_product', $collector['type']); ?> value="cat_product"><?php _e('Cart Line Item Quantity', 'wc_pricing'); ?></option>
-				<option title="Calculate quantity based on total sum of the categories in the cart" <?php selected('cat', $collector['type']); ?> value="cat"><?php _e('Sum of Category', 'wc_pricing'); ?></option>
+				<option title="Calculate quantity based on cart item quantity" <?php selected( 'cat_product', $collector['type'] ); ?> value="cat_product"><?php _e( 'Cart Line Item Quantity', 'wc_pricing' ); ?></option>
+				<option title="Calculate quantity based on total sum of the categories in the cart" <?php selected( 'cat', $collector['type'] ); ?> value="cat"><?php _e( 'Sum of Category', 'wc_pricing' ); ?></option>
 			</select>
 			<div class="cats">   
 				<label style="margin-top:10px;">Categories:</label>
 
-				<?php $chunks = array_chunk($terms, ceil(count($terms) / 3)); ?>
-				<?php foreach ($chunks as $chunk) : ?>
+				<?php $chunks = array_chunk( $terms, ceil( count( $terms ) / 3 ) ); ?>
+				<?php foreach ( $chunks as $chunk ) : ?>
 					<ul class="list-column">        
-						<?php foreach ($chunk as $term) : ?>
-							<?php $term_checked = (isset($collector['args']['cats']) && is_array($collector['args']['cats']) && in_array($term->term_id, $collector['args']['cats'])) ? 'checked="checked"' : ''; ?> 
+						<?php foreach ( $chunk as $term ) : ?>
+							<?php $term_checked = (isset( $collector['args']['cats'] ) && is_array( $collector['args']['cats'] ) && in_array( $term->term_id, $collector['args']['cats'] )) ? 'checked="checked"' : ''; ?> 
 							<li>
 								<label for="<?php echo $name; ?>_term_<?php echo $term->term_id; ?>" class="selectit">
 									<input <?php echo $term_checked; ?> type="checkbox" id="<?php echo $name; ?>_term_<?php echo $term->term_id; ?>" name="pricing_rules[<?php echo $name; ?>][collector][args][cats][]" value="<?php echo $term->term_id; ?>" /><?php echo $term->name; ?>
@@ -434,19 +443,19 @@ class woocommerce_category_pricing_rules_admin {
 			<?php
 		}
 
-		private function create_target_selector($targets, $name) {
-			$terms = (array) get_terms('product_cat', array('get' => 'all'));
+		private function create_target_selector( $targets, $name ) {
+			$terms = (array) get_terms( 'product_cat', array('get' => 'all') );
 			?>
 			<br />
 			<br />
 			<div class="cats">   
-				<label> <?php _e('Categories to apply adjustment to:', 'wc_pricing'); ?> <?php $this->get_description('target'); ?></label>
+				<label> <?php _e( 'Categories to apply adjustment to:', 'wc_pricing' ); ?> <?php $this->get_description( 'target' ); ?></label>
 
-				<?php $chunks = array_chunk($terms, ceil(count($terms) / 3)); ?>
-				<?php foreach ($chunks as $chunk) : ?>
+				<?php $chunks = array_chunk( $terms, ceil( count( $terms ) / 3 ) ); ?>
+				<?php foreach ( $chunks as $chunk ) : ?>
 					<ul class="list-column">        
-						<?php foreach ($chunk as $term) : ?>
-							<?php $term_checked = (isset($targets) && is_array($targets) && in_array($term->term_id, $targets)) ? 'checked="checked"' : ''; ?> 
+						<?php foreach ( $chunk as $term ) : ?>
+							<?php $term_checked = (isset( $targets ) && is_array( $targets ) && in_array( $term->term_id, $targets )) ? 'checked="checked"' : ''; ?> 
 							<li>
 								<label for="target_<?php echo $name; ?>_term_<?php echo $term->term_id; ?>" class="selectit">
 									<input <?php echo $term_checked; ?> type="checkbox" id="target_<?php echo $name; ?>_term_<?php echo $term->term_id; ?>" name="pricing_rules[<?php echo $name; ?>][targets][]" value="<?php echo $term->term_id; ?>" /><?php echo $term->name; ?>
@@ -460,7 +469,7 @@ class woocommerce_category_pricing_rules_admin {
 			<?php
 		}
 
-		private function get_row($rule, $name, $index) {
+		private function get_row( $rule, $name, $index ) {
 			?>
 			<tr id="pricing_rule_row_<?php echo $name . '_' . $index; ?>">
 				<td>
@@ -471,9 +480,9 @@ class woocommerce_category_pricing_rules_admin {
 				</td>
 				<td>
 					<select id="pricing_rule_type_value_<?php echo $name . '_' . $index; ?>" name="pricing_rules[<?php echo $name; ?>][rules][<?php echo $index; ?>][type]">
-						<option <?php selected('price_discount', $rule['type']); ?> value="price_discount">Price Discount</option>
-						<option <?php selected('percentage_discount', $rule['type']); ?> value="percentage_discount">Percentage Discount</option>
-						<option <?php selected('fixed_price', $rule['type']); ?> value="fixed_price">Fixed Price</option>
+						<option <?php selected( 'price_discount', $rule['type'] ); ?> value="price_discount">Price Discount</option>
+						<option <?php selected( 'percentage_discount', $rule['type'] ); ?> value="percentage_discount">Percentage Discount</option>
+						<option <?php selected( 'fixed_price', $rule['type'] ); ?> value="fixed_price">Fixed Price</option>
 					</select>
 				</td>
 				<td>
@@ -491,33 +500,33 @@ class woocommerce_category_pricing_rules_admin {
 			<?php
 		}
 
-		private function get_block_row($rule, $name, $index, $row_count) {
+		private function get_block_row( $rule, $name, $index, $row_count ) {
 			?>
 			<tr id="pricing_blockrule_row_<?php echo $name . '_' . $index; ?>">
 				<td>
-					<input title="<?php _e('Apply this adjustment when the quantity in the cart starts at this value.  Use * for any.', 'wc_pricing'); ?>" class="int_pricing_rule" id="pricing_rule_from_input_<?php echo $name . '_' . $index; ?>" type="text" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index ?>][from]" value="<?php echo $rule['from']; ?>" />
+					<input title="<?php _e( 'Apply this adjustment when the quantity in the cart starts at this value.  Use * for any.', 'wc_pricing' ); ?>" class="int_pricing_rule" id="pricing_rule_from_input_<?php echo $name . '_' . $index; ?>" type="text" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index ?>][from]" value="<?php echo $rule['from']; ?>" />
 				</td>
 				<td>
-					<input title="<?php _e('Apply the discount to this many items', 'wc_pricing'); ?>" class="int_pricing_rule" id="pricing_blockrule_to_input_<?php echo $name . '_' . $index; ?>" type="text" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index ?>][adjust]" value="<?php echo $rule['adjust']; ?>" />
+					<input title="<?php _e( 'Apply the discount to this many items', 'wc_pricing' ); ?>" class="int_pricing_rule" id="pricing_blockrule_to_input_<?php echo $name . '_' . $index; ?>" type="text" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index ?>][adjust]" value="<?php echo $rule['adjust']; ?>" />
 				</td>
 
 				<td>
-					<select title="<?php _e('The type of adjustment to apply', 'wc_pricing'); ?>" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index; ?>][type]">
-						<option <?php selected('fixed_adjustment', $rule['type']); ?> value="fixed_adjustment"><?php _e('Price Discount', 'wc_pricing'); ?></option>
-						<option <?php selected('percent_adjustment', $rule['type']); ?> value="percent_adjustment"><?php _e('Percentage Discount', 'wc_pricing'); ?></option>
-						<option <?php selected('fixed_price', $rule['type']); ?> value="fixed_price"><?php _e('Fixed Price', 'wc_pricing'); ?></option>
+					<select title="<?php _e( 'The type of adjustment to apply', 'wc_pricing' ); ?>" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index; ?>][type]">
+						<option <?php selected( 'fixed_adjustment', $rule['type'] ); ?> value="fixed_adjustment"><?php _e( 'Price Discount', 'wc_pricing' ); ?></option>
+						<option <?php selected( 'percent_adjustment', $rule['type'] ); ?> value="percent_adjustment"><?php _e( 'Percentage Discount', 'wc_pricing' ); ?></option>
+						<option <?php selected( 'fixed_price', $rule['type'] ); ?> value="fixed_price"><?php _e( 'Fixed Price', 'wc_pricing' ); ?></option>
 					</select>
 				</td>
 
 				<td>
-					<input title="<?php _e('The value of the adjustment. Currency and percentage symbols are not required', 'wc_pricing'); ?>" class="float_rule_number" id="pricing_blockrule_amount_input_<?php echo $name . '_' . $index; ?>" type="text" 
+					<input title="<?php _e( 'The value of the adjustment. Currency and percentage symbols are not required', 'wc_pricing' ); ?>" class="float_rule_number" id="pricing_blockrule_amount_input_<?php echo $name . '_' . $index; ?>" type="text" 
 					       name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index; ?>][amount]" value="<?php echo $rule['amount']; ?>" /> 
 				</td>
 
 				<td>
-					<select title="<?php _e('If the rule is repeating', 'wc_pricing'); ?>" id="pricing_blockrule_type_value_<?php echo $name . '_' . $index; ?>" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index; ?>][repeating]">
-						<option <?php selected('no', $rule['repeating']); ?> value="no"><?php _e('No', 'wc_pricing'); ?></option>
-						<option <?php selected('yes', $rule['repeating']); ?> value="yes"><?php _e('Yes', 'wc_pricing'); ?></option>
+					<select title="<?php _e( 'If the rule is repeating', 'wc_pricing' ); ?>" id="pricing_blockrule_type_value_<?php echo $name . '_' . $index; ?>" name="pricing_rules[<?php echo $name; ?>][blockrules][<?php echo $index; ?>][repeating]">
+						<option <?php selected( 'no', $rule['repeating'] ); ?> value="no"><?php _e( 'No', 'wc_pricing' ); ?></option>
+						<option <?php selected( 'yes', $rule['repeating'] ); ?> value="yes"><?php _e( 'Yes', 'wc_pricing' ); ?></option>
 					</select>
 				</td>
 			</tr>
@@ -528,12 +537,12 @@ class woocommerce_category_pricing_rules_admin {
 			?>
 			<script type="text/javascript">
 
-				jQuery(document).ready(function($) {
-		<?php do_action('woocommerce_dynamic_pricing_metabox_js', 'advanced_category'); ?>
+				jQuery(document).ready(function ($) {
+		<?php do_action( 'woocommerce_dynamic_pricing_metabox_js', 'advanced_category' ); ?>
 					var set_index = 0;
 					var rule_indexes = new Array();
 
-					$('.woocommerce_pricing_ruleset').each(function() {
+					$('.woocommerce_pricing_ruleset').each(function () {
 						var length = $('table tbody tr', $(this)).length;
 						if (length == 1) {
 							$('.delete_pricing_rule', $(this)).hide();
@@ -541,7 +550,7 @@ class woocommerce_category_pricing_rules_admin {
 					});
 
 
-					$("#woocommerce-pricing-add-ruleset").click(function(event) {
+					$("#woocommerce-pricing-add-ruleset").click(function (event) {
 						event.preventDefault();
 
 						var set_index = $("#woocommerce-pricing-rules-wrap").data('setindex') + 1;
@@ -549,17 +558,17 @@ class woocommerce_category_pricing_rules_admin {
 
 						var data = {
 							set_index: set_index,
-							post:<?php echo isset($_GET['post']) ? $_GET['post'] : 0; ?>,
+							post:<?php echo isset( $_GET['post'] ) ? $_GET['post'] : 0; ?>,
 							action: 'create_empty_category_ruleset'
 						}
 
-						$.post(ajaxurl, data, function(response) {
+						$.post(ajaxurl, data, function (response) {
 							$('#woocommerce-pricing-rules-wrap').append(response);
 
 						});
 					});
 
-					$('#woocommerce-pricing-rules-wrap').delegate('.pricing_rule_apply_to', 'change', function(event) {
+					$('#woocommerce-pricing-rules-wrap').delegate('.pricing_rule_apply_to', 'change', function (event) {
 						var value = $(this).val();
 
 						if (value != 'roles' && $('.roles', $(this).parent()).is(':visible')) {
@@ -573,34 +582,34 @@ class woocommerce_category_pricing_rules_admin {
 
 					});
 
-					$('#woocommerce-pricing-rules-wrap').delegate('.pricing_rule_mode', 'change', function(event) {
+					$('#woocommerce-pricing-rules-wrap').delegate('.pricing_rule_mode', 'change', function (event) {
 						var value = $(this).val();
 						if (value != 'block') {
-							$('table.block', $(this).closest('div.woocommerce_pricing_ruleset')).parent().fadeOut('fast', function() {
+							$('table.block', $(this).closest('div.woocommerce_pricing_ruleset')).parent().fadeOut('fast', function () {
 								$('table.continuous', $(this).closest('div.woocommerce_pricing_ruleset')).parent().fadeIn();
 							});
 						} else {
 
-							$('table.continuous', $(this).closest('div.woocommerce_pricing_ruleset')).parent().fadeOut('fast', function() {
+							$('table.continuous', $(this).closest('div.woocommerce_pricing_ruleset')).parent().fadeOut('fast', function () {
 								$('table.block', $(this).closest('div.woocommerce_pricing_ruleset')).parent().fadeIn();
 							});
 						}
 					});
 
 					//Remove Pricing Set
-					$('#woocommerce-pricing-rules-wrap').delegate('.delete_pricing_ruleset', 'click', function(event) {
+					$('#woocommerce-pricing-rules-wrap').delegate('.delete_pricing_ruleset', 'click', function (event) {
 						event.preventDefault();
 						DeleteRuleSet($(this).data('name'));
 						return false;
 					});
 
 					//Add Button
-					$('#woocommerce-pricing-rules-wrap').delegate('.add_pricing_rule', 'click', function(event) {
+					$('#woocommerce-pricing-rules-wrap').delegate('.add_pricing_rule', 'click', function (event) {
 						event.preventDefault();
 						InsertContinuousRule($(this).data('index'), $(this).data('name'));
 					});
 
-					$('#woocommerce-pricing-rules-wrap').delegate('.add_pricing_blockrule', 'click', function(event) {
+					$('#woocommerce-pricing-rules-wrap').delegate('.add_pricing_blockrule', 'click', function (event) {
 						event.preventDefault();
 						InsertBlockRule($(this).data('index'), $(this).data('name'));
 					});
@@ -608,13 +617,13 @@ class woocommerce_category_pricing_rules_admin {
 
 
 					//Remove Button                
-					$('#woocommerce-pricing-rules-wrap').delegate('.delete_pricing_rule', 'click', function(event) {
+					$('#woocommerce-pricing-rules-wrap').delegate('.delete_pricing_rule', 'click', function (event) {
 						event.preventDefault();
 						DeleteRule($(this).data('index'), $(this).data('name'));
 					});
 
 					//Remove Button                
-					$('#woocommerce-pricing-rules-wrap').delegate('.delete_pricing_blockrule', 'click', function(event) {
+					$('#woocommerce-pricing-rules-wrap').delegate('.delete_pricing_blockrule', 'click', function (event) {
 						event.preventDefault();
 						DeleteBlockRule($(this).closest('tr'), $(this).closest('table'));
 					});
@@ -808,13 +817,13 @@ class woocommerce_category_pricing_rules_admin {
 			<?php
 		}
 
-		private function selected($value, $compare, $arg = true) {
-			if (!$arg) {
+		private function selected( $value, $compare, $arg = true ) {
+			if ( !$arg ) {
 				echo '';
-			} else if ((string) $value == (string) $compare) {
+			} else if ( (string) $value == (string) $compare ) {
 				echo 'selected="selected"';
 			}
 		}
 
 	}
-	?>
+	

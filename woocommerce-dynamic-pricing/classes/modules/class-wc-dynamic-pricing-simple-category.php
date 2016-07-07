@@ -48,6 +48,9 @@ class WC_Dynamic_Pricing_Simple_Category extends WC_Dynamic_Pricing_Simple_Base 
 		$pricing_rule_sets = get_option( '_a_category_pricing_rules', array() );
 		if ( is_array( $pricing_rule_sets ) && sizeof( $pricing_rule_sets ) > 0 ) {
 			foreach ( $pricing_rule_sets as $set_id => $pricing_rule_set ) {
+				
+				
+				
 				$execute_rules = false;
 				$conditions_met = 0;
 				$pricing_conditions = $pricing_rule_set['conditions'];
@@ -78,7 +81,7 @@ class WC_Dynamic_Pricing_Simple_Category extends WC_Dynamic_Pricing_Simple_Base 
 		if ( $this->available_rulesets && count( $this->available_rulesets ) ) {
 
 			foreach ( $cart as $cart_item_key => $cart_item ) {
-				$process_discounts = apply_filters( 'woocommerce_dynamic_pricing_process_product_discounts', true, $cart_item['data'], 'simple_category', $this );
+				$process_discounts = apply_filters( 'woocommerce_dynamic_pricing_process_product_discounts', true, $cart_item['data'], 'simple_category', $this, $cart_item );
 				if ( !$process_discounts ) {
 					continue;
 				}
@@ -138,23 +141,27 @@ class WC_Dynamic_Pricing_Simple_Category extends WC_Dynamic_Pricing_Simple_Base 
 
 	private function get_adjusted_price( $rule, $price ) {
 		$result = false;
-		$num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
+
+		$amount = apply_filters( 'woocommerce_dynamic_pricing_get_rule_amount', $rule['amount'], $rule, null, $this );
+		// NOTE(stas) : This is done to increase precision for addons calculation but still show prices with only 2 decimals;
+        // $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
+        $num_decimals = 4;
 
 		switch ( $rule['type'] ) {
 			case 'price_discount':
 			case 'fixed_product':
-				$adjusted = floatval( $price ) - floatval( $rule['amount'] );
+				$adjusted = floatval( $price ) - floatval( $amount );
 				$result = $adjusted >= 0 ? $adjusted : 0;
 				break;
 			case 'percentage_discount':
 			case 'percent_product':
-				if ( $rule['amount'] > 1 ) {
-					$rule['amount'] = $rule['amount'] / 100;
+				if ( $amount > 1 ) {
+					$amount = $amount / 100;
 				}
-				$result = round( floatval( $price ) - ( floatval( $rule['amount'] ) * $price), (int) $num_decimals );
+				$result = round( floatval( $price ) - ( floatval( $amount ) * $price), (int) $num_decimals );
 				break;
 			case 'fixed_price':
-				$result = round( $rule['amount'], (int) $num_decimals );
+				$result = round( $amount, (int) $num_decimals );
 				break;
 			default:
 				$result = false;
@@ -208,16 +215,18 @@ class WC_Dynamic_Pricing_Simple_Category extends WC_Dynamic_Pricing_Simple_Base 
 
 		if ( $rulesets && count( $rulesets ) ) {
 			foreach ( $rulesets as $set_id => $pricing_rule_set ) {
-				if (!isset($pricing_rule_set['mode']) || (isset($pricing_rule_set['mode']) && $pricing_rule_set['mode'] != 'block')) {
-					$process_discounts = apply_filters( 'woocommerce_dynamic_pricing_process_product_discounts', true, $_product, 'simple_category', $this );
+				if ( !isset( $pricing_rule_set['mode'] ) || (isset( $pricing_rule_set['mode'] ) && $pricing_rule_set['mode'] != 'block') ) {
+					$process_discounts = apply_filters( 'woocommerce_dynamic_pricing_process_product_discounts', true, $_product, 'simple_category', $this, array('data' => $_product) );
 					if ( $process_discounts ) {
-						if ( $this->is_applied_to_product( $_product, $pricing_rule_set['collector']['args']['cats'][0] ) ) {
+						//Grab targets from advanced category discounts so we properly show 0 based discounts for targets, not for the collector category values. 
+						$cats_to_check = isset($pricing_rule_set['targets']) ? array_map('intval', $pricing_rule_set['targets']) : $pricing_rule_set['collector']['args']['cats'][0];
+						if ( $this->is_applied_to_product( $_product, $cats_to_check ) ) {
 							$rule = array_shift( $pricing_rule_set['rules'] );
-							
-							if (!isset($rule['from'])){
+
+							if ( !isset( $rule['from'] ) ) {
 								$rule['from'] = 0;
 							}
-							
+
 							if ( $rule['from'] == '0' ) {
 								$temp = $this->get_adjusted_price( $rule, $working_price );
 
@@ -233,6 +242,7 @@ class WC_Dynamic_Pricing_Simple_Category extends WC_Dynamic_Pricing_Simple_Base 
 			}
 
 			if ( $price_adjusted !== false && floatval( $working_price ) != floatval( $price_adjusted ) ) {
+				
 				return $price_adjusted;
 			}
 		}

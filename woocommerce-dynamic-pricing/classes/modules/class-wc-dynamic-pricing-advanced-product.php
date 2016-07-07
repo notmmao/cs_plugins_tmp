@@ -25,11 +25,11 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 
 
 		foreach ( $temp_cart as $cart_item_key => $cart_item ) {
-			$process_discounts = apply_filters( 'woocommerce_dynamic_pricing_process_product_discounts', true, $cart_item['data'], 'advanced_product', $this );
+			$process_discounts = apply_filters( 'woocommerce_dynamic_pricing_process_product_discounts', true, $cart_item['data'], 'advanced_product', $this, $cart_item );
 			if ( !$process_discounts ) {
 				continue;
 			}
-
+			
 			if ( !$this->is_cumulative( $cart_item, $cart_item_key ) ) {
 				if ( $this->is_item_discounted( $cart_item, $cart_item_key ) ) {
 					continue;
@@ -72,10 +72,10 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 	}
 
 	protected function get_pricing_rule_sets( $cart_item ) {
-		$pricing_rule_sets = apply_filters('wc_dynamic_pricing_get_product_pricing_rule_sets', get_post_meta( $cart_item['data']->id, '_pricing_rules', true ), $cart_item['data']->id, $this);
+		$pricing_rule_sets = apply_filters( 'wc_dynamic_pricing_get_product_pricing_rule_sets', get_post_meta( $cart_item['data']->id, '_pricing_rules', true ), $cart_item['data']->id, $this );
 		$sets = array();
-		
-		
+
+
 		if ( $pricing_rule_sets ) {
 			foreach ( $pricing_rule_sets as $set_id => $set_data ) {
 				$sets[$set_id] = new WC_Dynamic_Pricing_Adjustment_Set_Product( $set_id, $set_data );
@@ -108,10 +108,11 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 				if ( $q >= $rule['from'] && $q <= $rule['to'] ) {
 					$this->discount_data['rule'] = $rule;
 
+
 					$amount = apply_filters( 'woocommerce_dynamic_pricing_get_rule_amount', $rule['amount'], $rule, $cart_item, $this );
-					// $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
-					$num_decimals = 4;
-					
+					// NOTE(stas) : This is done to increase precision for addons calculation but still show prices with only 2 decimals;
+        			// $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
+        			$num_decimals = 4;
 					switch ( $rule['type'] ) {
 						case 'price_discount':
 							$adjusted = floatval( $price ) - floatval( $amount );
@@ -135,7 +136,6 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 				}
 			}
 		}
-
 		return $result;
 	}
 
@@ -151,6 +151,10 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 
 				$q = $this->get_quantity_to_compare( $cart_item, $collector );
 				$rq = 0; //required quantity to trigger the calculations
+
+				if ( $collector['type'] == 'cart_item' && $q <= $rule['from'] ) {
+					continue;
+				}
 
 				if ( $rule['repeating'] == 'yes' ) {
 					switch ( $collector['type'] ) {
@@ -314,8 +318,9 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 				if ( $q >= $rq ) {
 
 					$amount = apply_filters( 'woocommerce_dynamic_pricing_get_rule_amount', $rule['amount'], $rule, $cart_item, $this );
-					// $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
-					$num_decimals = 4;
+					// NOTE(stas) : This is done to increase precision for addons calculation but still show prices with only 2 decimals;
+     				// $num_decimals = apply_filters( 'woocommerce_dynamic_pricing_get_decimals', (int) get_option( 'woocommerce_price_num_decimals' ) );
+          			$num_decimals = 4;
 
 					switch ( $rule['type'] ) {
 						case 'fixed_adjustment':
@@ -351,7 +356,7 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 							$adjusted = round( $amount, (int) $num_decimals );
 							$line_total = 0;
 							$full_price_quantity = $cart_item['quantity'] - $a;
-							$discount_quantity = $rule['adjust'];
+							$discount_quantity = $a;
 							$line_total = ($discount_quantity * $adjusted) + ($full_price_quantity * $price);
 							$result = $line_total / $cart_item['quantity'];
 							$result = $result >= 0 ? $result : 0;
@@ -369,11 +374,11 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 
 		return $result;
 	}
-	
+
 	protected function get_quantity_to_compare( $cart_item, $collector ) {
 		global $woocommerce_pricing, $woocommerce;
 		$quantity = 0;
-		
+
 		switch ( $collector['type'] ) {
 			case 'cart_item':
 				$quantity = $cart_item['quantity'];
@@ -385,7 +390,9 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 						$temp_cart = WC_Dynamic_Pricing_Compatibility::WC()->cart->cart_contents;
 						foreach ( $temp_cart as $lck => $cart_item ) {
 							if ( is_object_in_term( $cart_item['product_id'], 'product_cat', $collector['args']['cats'] ) ) {
-								$quantity += (int) $cart_item['quantity'];
+								if ( apply_filters( 'woocommerce_dynamic_pricing_count_categories_for_cart_item', true, $cart_item, $lck ) ) {
+									$quantity += (int) $cart_item['quantity'];
+								}
 							}
 						}
 					}
@@ -406,5 +413,3 @@ class WC_Dynamic_Pricing_Advanced_Product extends WC_Dynamic_Pricing_Advanced_Ba
 	}
 
 }
-
-?>

@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	/*
 	 Progressive enhancement.  If javascript is enabled we change the body class.  Which in turn hides the checkboxes with css.
 	 */
@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
 	/*
 	 Add toggle switch after each checkbox.  If checked, then toggle the switch.
 	 */
-	$('.checkbox', '.dynamic-pricing-js').after(function() {
+	$('.checkbox', '.dynamic-pricing-js').after(function () {
 		if ($(this).is(":checked")) {
 			return "<a href='#' class='toggle checked' ref='" + $(this).attr("id") + "'></a>";
 		} else {
@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
 	/*
 	 When the toggle switch is clicked, check off / de-select the associated checkbox
 	 */
-	$('.toggle', '.dynamic-pricing-js').click(function(e) {
+	$('.toggle', '.dynamic-pricing-js').click(function (e) {
 		var checkboxID = $(this).attr("ref");
 		var checkbox = $('#' + checkboxID);
 
@@ -36,9 +36,9 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 
 	});
-	
-	
-	$('#woocommerce-pricing-rules-wrap').on('click', 'h4.first', function() {
+
+
+	$('#woocommerce-pricing-rules-wrap').on('click', 'h4.first', function () {
 		$(this).parent().toggleClass('closed');
 	});
 

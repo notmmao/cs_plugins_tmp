@@ -21,10 +21,11 @@
  * @copyright Copyright (c) 2013, SkyVerge, Inc.
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
-if (!defined('ABSPATH'))
+if ( !defined( 'ABSPATH' ) )
 	exit; // Exit if accessed directly
 
-if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
+if ( !class_exists( 'WC_Dynamic_Pricing_Compatibility' ) ) :
+
 	/**
 	 * WooCommerce Compatibility Utility Class
 	 *
@@ -42,11 +43,12 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 	 * @version 1.0
 	 */
 	class WC_Dynamic_Pricing_Compatibility {
-		public static function wc_price($price) {
-			if (self::is_wc_version_gte_2_1()) {
-				return wc_price($price);
+
+		public static function wc_price( $price ) {
+			if ( self::is_wc_version_gte_2_1() ) {
+				return wc_price( $price );
 			} else {
-				return woocommerce_price($price);
+				return woocommerce_price( $price );
 			}
 		}
 
@@ -57,13 +59,13 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $label the label to display
 		 * @return string the label to display
 		 */
-		public static function wc_attribute_label($label) {
+		public static function wc_attribute_label( $label ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return wc_attribute_label($label);
+			if ( self::is_wc_version_gte_2_1() ) {
+				return wc_attribute_label( $label );
 			} else {
 				global $woocommerce;
-				return $woocommerce->attribute_label($label);
+				return $woocommerce->attribute_label( $label );
 			}
 		}
 
@@ -74,17 +76,17 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $message The text to display in the notice.
 		 * @param string $notice_type The singular name of the notice type - either error, success or notice. [optional]
 		 */
-		public static function wc_add_notice($message, $notice_type = 'success') {
+		public static function wc_add_notice( $message, $notice_type = 'success' ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				wc_add_notice($message, $notice_type);
+			if ( self::is_wc_version_gte_2_1() ) {
+				wc_add_notice( $message, $notice_type );
 			} else {
 				global $woocommerce;
 
-				if ('error' == $notice_type) {
-					$woocommerce->add_error($message);
+				if ( 'error' == $notice_type ) {
+					$woocommerce->add_error( $message );
 				} else {
-					$woocommerce->add_message($message);
+					$woocommerce->add_message( $message );
 				}
 			}
 		}
@@ -96,7 +98,7 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function wc_print_notices() {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				wc_print_notices();
 			} else {
 				global $woocommerce;
@@ -110,13 +112,13 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @since 1.0
 		 * @param string $code javascript
 		 */
-		public static function wc_enqueue_js($code) {
+		public static function wc_enqueue_js( $code ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				wc_enqueue_js($code);
+			if ( self::is_wc_version_gte_2_1() ) {
+				wc_enqueue_js( $code );
 			} else {
 				global $woocommerce;
-				$woocommerce->add_inline_js($code);
+				$woocommerce->add_inline_js( $code );
 			}
 		}
 
@@ -127,13 +129,13 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $content the url
 		 * @return string the url with https protocol
 		 */
-		public static function force_https_url($content) {
+		public static function force_https_url( $content ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return WC_HTTPS::force_https_url($content);
+			if ( self::is_wc_version_gte_2_1() ) {
+				return WC_HTTPS::force_https_url( $content );
 			} else {
 				global $woocommerce;
-				return $woocommerce->force_ssl($content);
+				return $woocommerce->force_ssl( $content );
 			}
 		}
 
@@ -145,10 +147,10 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function is_checkout_pay_page() {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				return is_checkout_pay_page();
 			} else {
-				return is_page(woocommerce_get_page_id('pay'));
+				return is_page( woocommerce_get_page_id( 'pay' ) );
 			}
 		}
 
@@ -160,11 +162,11 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function get_checkout_pay_page_order_id() {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				global $wp;
-				return isset($wp->query_vars['order-pay']) ? absint($wp->query_vars['order-pay']) : 0;
+				return isset( $wp->query_vars['order-pay'] ) ? absint( $wp->query_vars['order-pay'] ) : 0;
 			} else {
-				return isset($_GET['order']) ? absint($_GET['order']) : 0;
+				return isset( $_GET['order'] ) ? absint( $_GET['order'] ) : 0;
 			}
 		}
 
@@ -174,9 +176,9 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @since 1.0
 		 * @return float the shipping total
 		 */
-		public static function get_total_shipping($order) {
+		public static function get_total_shipping( $order ) {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				return $order->get_total_shipping();
 			} else {
 				return $order->get_shipping();
@@ -190,12 +192,12 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @since 1.0
 		 * @return mixed order custom field value for field named $name
 		 */
-		public static function get_order_custom_field($order, $name) {
+		public static function get_order_custom_field( $order, $name ) {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				return $order->$name;
 			} else {
-				return isset($order->order_custom_fields['_' . $name][0]) && $order->order_custom_fields['_' . $name][0] ? $order->order_custom_fields['_' . $name][0] : null;
+				return isset( $order->order_custom_fields['_' . $name][0] ) && $order->order_custom_fields['_' . $name][0] ? $order->order_custom_fields['_' . $name][0] : null;
 			}
 		}
 
@@ -206,7 +208,7 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function set_messages() {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				// no-op in WC 2.1+
 			} else {
 				global $woocommerce;
@@ -222,7 +224,7 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function new_wc_logger() {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				return new WC_Logger();
 			} else {
 				global $woocommerce;
@@ -238,12 +240,12 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $gateway_class_name the gateway class name
 		 * @return string admin configuration url for the gateway
 		 */
-		public static function get_payment_gateway_configuration_url($gateway_class_name) {
+		public static function get_payment_gateway_configuration_url( $gateway_class_name ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return admin_url('admin.php?page=wc-settings&tab=checkout&section=' . strtolower($gateway_class_name));
+			if ( self::is_wc_version_gte_2_1() ) {
+				return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . strtolower( $gateway_class_name ) );
 			} else {
-				return admin_url('admin.php?page=woocommerce_settings&tab=payment_gateways&section=' . $gateway_class_name);
+				return admin_url( 'admin.php?page=woocommerce_settings&tab=payment_gateways&section=' . $gateway_class_name );
 			}
 		}
 
@@ -255,16 +257,16 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $gateway_class_name the gateway class name
 		 * @return boolean true if the current page is the admin configuration page for the gateway
 		 */
-		public static function is_payment_gateway_configuration_page($gateway_class_name) {
+		public static function is_payment_gateway_configuration_page( $gateway_class_name ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return isset($_GET['page']) && 'wc-settings' == $_GET['page'] &&
-					isset($_GET['tab']) && 'checkout' == $_GET['tab'] &&
-					isset($_GET['section']) && strtolower($gateway_class_name) == $_GET['section'];
+			if ( self::is_wc_version_gte_2_1() ) {
+				return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
+					isset( $_GET['tab'] ) && 'checkout' == $_GET['tab'] &&
+					isset( $_GET['section'] ) && strtolower( $gateway_class_name ) == $_GET['section'];
 			} else {
-				return isset($_GET['page']) && 'woocommerce_settings' == $_GET['page'] &&
-					isset($_GET['tab']) && 'payment_gateways' == $_GET['tab'] &&
-					isset($_GET['section']) && $gateway_class_name == $_GET['section'];
+				return isset( $_GET['page'] ) && 'woocommerce_settings' == $_GET['page'] &&
+					isset( $_GET['tab'] ) && 'payment_gateways' == $_GET['tab'] &&
+					isset( $_GET['section'] ) && $gateway_class_name == $_GET['section'];
 			}
 		}
 
@@ -276,12 +278,12 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $shipping_method_class_name the shipping method class name
 		 * @return string admin configuration url for the shipping method
 		 */
-		public static function get_shipping_method_configuration_url($shipping_method_class_name) {
+		public static function get_shipping_method_configuration_url( $shipping_method_class_name ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return admin_url('admin.php?page=wc-settings&tab=shipping&section=' . strtolower($shipping_method_class_name));
+			if ( self::is_wc_version_gte_2_1() ) {
+				return admin_url( 'admin.php?page=wc-settings&tab=shipping&section=' . strtolower( $shipping_method_class_name ) );
 			} else {
-				return admin_url('admin.php?page=woocommerce_settings&tab=shipping&section=' . $shipping_method_class_name);
+				return admin_url( 'admin.php?page=woocommerce_settings&tab=shipping&section=' . $shipping_method_class_name );
 			}
 		}
 
@@ -293,16 +295,16 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $shipping_method_class_name the shipping method class name
 		 * @return boolean true if the current page is the admin configuration page for the shipping method
 		 */
-		public static function is_shipping_method_configuration_page($shipping_method_class_name) {
+		public static function is_shipping_method_configuration_page( $shipping_method_class_name ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return isset($_GET['page']) && 'wc-settings' == $_GET['page'] &&
-					isset($_GET['tab']) && 'shipping' == $_GET['tab'] &&
-					isset($_GET['section']) && strtolower($shipping_method_class_name) == $_GET['section'];
+			if ( self::is_wc_version_gte_2_1() ) {
+				return isset( $_GET['page'] ) && 'wc-settings' == $_GET['page'] &&
+					isset( $_GET['tab'] ) && 'shipping' == $_GET['tab'] &&
+					isset( $_GET['section'] ) && strtolower( $shipping_method_class_name ) == $_GET['section'];
 			} else {
-				return isset($_GET['page']) && 'woocommerce_settings' == $_GET['page'] &&
-					isset($_GET['tab']) && 'shipping' == $_GET['tab'] &&
-					isset($_GET['section']) && $shipping_method_class_name == $_GET['section'];
+				return isset( $_GET['page'] ) && 'woocommerce_settings' == $_GET['page'] &&
+					isset( $_GET['tab'] ) && 'shipping' == $_GET['tab'] &&
+					isset( $_GET['section'] ) && $shipping_method_class_name == $_GET['section'];
 			}
 		}
 
@@ -317,12 +319,12 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param  boolean $trim_zeros from end of string
 		 * @return string
 		 */
-		public static function wc_format_decimal($number, $dp = false, $trim_zeros = false) {
+		public static function wc_format_decimal( $number, $dp = false, $trim_zeros = false ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return wc_format_decimal($number, $dp, $trim_zeros);
+			if ( self::is_wc_version_gte_2_1() ) {
+				return wc_format_decimal( $number, $dp, $trim_zeros );
 			} else {
-				return woocommerce_format_total($number);
+				return woocommerce_format_total( $number );
 			}
 		}
 
@@ -334,14 +336,14 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $notice_type The name of the notice type - either error, success or notice. [optional]
 		 * @return int the notice count
 		 */
-		public static function wc_notice_count($notice_type = '') {
+		public static function wc_notice_count( $notice_type = '' ) {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return wc_notice_count($notice_type);
+			if ( self::is_wc_version_gte_2_1() ) {
+				return wc_notice_count( $notice_type );
 			} else {
 				global $woocommerce;
 
-				if ('error' == $notice_type) {
+				if ( 'error' == $notice_type ) {
 					return $woocommerce->error_count();
 				} else {
 					return $woocommerce->message_count();
@@ -357,11 +359,11 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function get_chosen_shipping_methods() {
 
-			if (self::is_wc_version_gte_2_1()) {
-				$chosen_shipping_methods = self::WC()->session->get('chosen_shipping_methods');
+			if ( self::is_wc_version_gte_2_1() ) {
+				$chosen_shipping_methods = self::WC()->session->get( 'chosen_shipping_methods' );
 				return $chosen_shipping_methods ? $chosen_shipping_methods : array();
 			} else {
-				return array(self::WC()->session->get('chosen_shipping_method'));
+				return array(self::WC()->session->get( 'chosen_shipping_method' ));
 			}
 		}
 
@@ -373,17 +375,17 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @since 1.0-1
 		 * @return array of shipping method ids for $order
 		 */
-		public static function get_shipping_method_ids($order) {
+		public static function get_shipping_method_ids( $order ) {
 
-			if (self::get_order_custom_field($order, 'shipping_method')) {
+			if ( self::get_order_custom_field( $order, 'shipping_method' ) ) {
 
 				// pre WC 2.1 data
-				return array(self::get_order_custom_field($order, 'shipping_method'));
-			} elseif (self::is_wc_version_gte_2_1()) {
+				return array(self::get_order_custom_field( $order, 'shipping_method' ));
+			} elseif ( self::is_wc_version_gte_2_1() ) {
 
 				$shipping_method_ids = array();
 
-				foreach ($order->get_shipping_methods() as $shipping_method) {
+				foreach ( $order->get_shipping_methods() as $shipping_method ) {
 					$shipping_method_ids[] = $shipping_method['method_id'];
 				}
 
@@ -399,13 +401,13 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @since 1.0
 		 * @return boolean true if $order is shipped by $method_id
 		 */
-		public static function has_shipping_method($order, $method_id) {
+		public static function has_shipping_method( $order, $method_id ) {
 
-			if (self::get_order_custom_field($order, 'shipping_method')) {
+			if ( self::get_order_custom_field( $order, 'shipping_method' ) ) {
 				// pre WC 2.1 data
-				return $method_id == self::get_order_custom_field($order, 'shipping_method');
-			} elseif (self::is_wc_version_gte_2_1()) {
-				return $order->has_shipping_method($method_id);
+				return $method_id == self::get_order_custom_field( $order, 'shipping_method' );
+			} elseif ( self::is_wc_version_gte_2_1() ) {
+				return $order->has_shipping_method( $method_id );
 			}
 
 			// default
@@ -420,7 +422,7 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function save_errors() {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				WC_Admin_Meta_Boxes::save_errors();
 			} else {
 				woocommerce_meta_boxes_save_errors();
@@ -436,9 +438,9 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		public static function get_wc_version() {
 
 			// WOOCOMMERCE_VERSION is now WC_VERSION, though WOOCOMMERCE_VERSION is still available for backwards compatibility, we'll disregard it on 2.1+
-			if (defined('WC_VERSION') && WC_VERSION)
+			if ( defined( 'WC_VERSION' ) && WC_VERSION )
 				return WC_VERSION;
-			if (defined('WOOCOMMERCE_VERSION') && WOOCOMMERCE_VERSION)
+			if ( defined( 'WOOCOMMERCE_VERSION' ) && WOOCOMMERCE_VERSION )
 				return WOOCOMMERCE_VERSION;
 
 			return null;
@@ -452,7 +454,7 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function WC() {
 
-			if (self::is_wc_version_gte_2_1()) {
+			if ( self::is_wc_version_gte_2_1() ) {
 				return WC();
 			} else {
 				global $woocommerce;
@@ -468,10 +470,10 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 */
 		public static function is_wc_loaded() {
 
-			if (self::is_wc_version_gte_2_1()) {
-				return class_exists('WooCommerce');
+			if ( self::is_wc_version_gte_2_1() ) {
+				return class_exists( 'WooCommerce' );
 			} else {
-				return class_exists('Woocommerce');
+				return class_exists( 'Woocommerce' );
 			}
 		}
 
@@ -484,7 +486,17 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		public static function is_wc_version_gte_2_1() {
 
 			// can't use gte 2.1 at the moment because 2.1-BETA < 2.1
-			return self::is_wc_version_gt('2.0.20');
+			return self::is_wc_version_gt( '2.0.20' );
+		}
+
+		/**
+		 * Returns true if the installed version of WooCommerce is 2.1 or greater
+		 *
+		 * @since 1.0
+		 * @return boolean true if the installed version of WooCommerce is 2.1 or greater
+		 */
+		public static function is_wc_version_gte_2_3() {
+			return self::is_wc_version_gt( '2.2.10' );
 		}
 
 		/**
@@ -494,12 +506,16 @@ if (!class_exists('WC_Dynamic_Pricing_Compatibility')) :
 		 * @param string $version the version to compare
 		 * @return boolean true if the installed version of WooCommerce is > $version
 		 */
-		public static function is_wc_version_gt($version) {
+		public static function is_wc_version_gt( $version ) {
 
-			return self::get_wc_version() && version_compare(self::get_wc_version(), $version, '>');
+			return self::get_wc_version() && version_compare( self::get_wc_version(), $version, '>' );
 		}
 
 	}
+
+	
+
+	
 
 	
 

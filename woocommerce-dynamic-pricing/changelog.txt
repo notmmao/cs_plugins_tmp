@@ -1,4 +1,143 @@
 *** Dynamic Pricing Changelog ***
+2016.04.01 - version 2.10.13
+	* Update:  Disallow coupon use when an item is discounted with Dynamic Pricing and a coupon is set to exclude sale price items. 
+	
+2016.01.05 - version 2.10.12
+	* Update:  Allow stacking of order total rules using the filter:  add_filter('wc_dynamic_pricing_stack_order_totals', '__return_true');
+
+2015.12.07 - version 2.10.11
+	* Update:  Correct issue when using simple modules and the result price is 0. Will correctly display "Free" now. 
+
+2015.11.30 - version 2.10.10
+	* Update:  Check if product is present inside of price html functions.  Resolves conflict with Free Gift plugin. 
+
+	
+2015.09.25 - version 2.10.9
+	* Feature: Added filter for woocommerce_is_on_sale to return correct value when Dynamic Pricing has been applied. 
+	
+2015.09.25 - version 2.10.8
+	* Fix:  Allow the decimal character to be entered in the amount field for advanced product rules. 
+	
+2015.09.02 - version 2.10.7
+	* Update:  Allow 0 for the minimum order total for the Advanced Order Total module. 
+	
+2015.08.19 - version 2.10.6
+	* Update:  Update simple category tab description. 
+	
+2015.08.10 - version 2.10.5
+	* Update:  Enhance the filters for woocommerce_dynamic_pricing_is_cumulative to account for simple rules and their display in the main shop pages. 
+	* Fix:     Always filter modules before use anywhere 
+	
+2015.07.24 - version 2.10.4
+	* Update:  Clean up the variation selector for advanced product rules. 
+	* Update:  Add a flag to the on_get_price filter so other extensions can call that function directly. 
+	* Update:  Allow composite products to correctly reflect prices when optional products are used. 
+
+2015.07.24 - version 2.10.3
+	* Fixes issue with discount being calculated twice when the order is placed. 
+	
+2015.07.16 - version 2.10.2
+	* WC 2.4 Compatibility
+	* New Feature:  Added "Guest" to the selection box for Applies To.  This will allow rules to target unauthenticated users only. 
+	* Update:  Allow the get_price filter to function on both is_product() and AJAX calls.  Fixes compatibility with composite products. 
+	* Update:  Compatibility update for Composite Products. 
+	* Update:  Correct CSS issues with the date fields. 
+	* Fix:  When using 0 based advanced category rules only show the discount if the item is a target category, not a source category. 
+	* Fix:  Fixes an issue where the mini-cart would display the wrong discount and total amount after quantities were changed.  
+	* Fix:  Fixes an issue where the mini-cart would calculate the discount twice. 
+	
+2015.06.08 - version 2.10.1
+	* Update:  Add in missing translation string. 
+
+2015.05.27 - version 2.10.0
+	* Update:  Don't apply block discounts to items which are already free. 
+	
+2015.05.19 - version 2.9.12
+	* Update:  Add the current cart item array to the filter woocommerce_dynamic_pricing_process_product_discounts
+	
+2015.05.06 - version 2.9.11
+	* Update:  Use wordpress current_time() rather than time() to get the correct system time. 
+	
+2015.04.10 - version 2.9.10
+	* Update:  Added check before accessing the cart_contents variable.  Some themes incorrectly set this as a string when it's empty. 
+	
+2015.03.23 - version 2.9.9
+	* Fix:  Remove double processing error from Groups module when using 0 based discount.  The groups module was processing individual product rules on top of the price calculated by simple_product. 
+	* Fix:  Typo in adjustment_set referencing data_from rather than date_from. 
+	
+2015.03.09 - version 2.9.8
+	* Update:  Update the way simple membership rules display on shop and archive pages.  Allow Dynamic Pricing to calculate the min / max prices of 
+		variations. 
+		
+2015.02.28 - version 2.9.7
+	* Fix:  Remove warning about missing date from adjustment set processing. 
+	* Cleanup: Remove closing PHP tags. 
+	* Cleanup: Format all source files according to WordPress coding standards. 
+	
+2015.02.25 - version 2.9.6
+	* Tweak:    Undo change from 2.9.3 in situations where we are using category or product counts. 
+
+2015.02.24 - version 2.9.5
+	* Feature:  Added woocommerce_dynamic_pricing_process_product_discounts to the advanced category module.  
+	* Feature:  Added configurable titles to advanced category pricing for admin dashboard reference. 
+	* Feature:  Added configurable titles to advanced total pricing for admin dashboard reference. 
+
+2015.02.17 - version 2.9.4
+	* Fix:  Resolves problems with the subtotal in the cart widget. 
+	* Feature:  Added filter woocommerce_dynamic_pricing_count_categories_for_cart_item.  Can be used to exclude cart items from counting towards a category total.  
+			Used primarily for excluding Bundled Products which have per item pricing. 
+			Filter:  woocommerce_dynamic_pricing_count_categories_for_cart_item
+			Parameters:  
+				$include:  If the cart item should include itself in category counts. 
+				$cart_item:  The cart item being checked. 
+				$cart_item_key:  The key of the cart item being checked. 
+	
+2015.02.05 - version 2.9.3
+	* Fix:  Fix calculations when using block pricing and fixed prices. 
+	* Update:  Compatibility with Paypal Express to fix rounding problems. 
+
+2015.02.03 - version 2.9.2
+	* Updates to on_get_variation_price to allow for when the function is called with some missing parameters from some custom themes. 
+	
+2015.01.28 - version 2.9.1
+	* Added woocommerce_dynamic_pricing_process_product_discounts to the groups module. 
+	
+2015.01.03 - version 2.9.0
+	* Updates to show prices in discount format when the discount result is free. 
+	* Added category filter and category targets to the advanced order total module. This allows order total discounts
+		to be applied only when a specific amount of products categories is ordered and allows the selection of 
+		which products should receive the order total discount. 
+	* Removed redundant price filters for variable and grouped products. 
+	* Update to show the lowest prices for a variation when 0 based product or category rules are used. 
+	* Update to remove validation from product rule inputs. Seems to cause problems in other languages. 
+	* Update to enqueue scripts for dynamic pricing properly with WooCommerce >= 2.3
+	* Updates for WooCommerce to remove the 'discounts' key from the cart when it is loaded from the session with WooCommerce >= 2.3
+	* Update for the admin icon on the product edit dashboard with WooCommerce >= 2.3
+		
+2014.12.16 - version 2.8.0
+	* Update advanced category counter to correctly count quantities when the targets and source categories are different. 
+	* Only process rules when 1 or more of either clean or mixed souce quantities are found. 
+	
+2014.12.01 - version 2.7.9
+	* Add in the WooCommerce Price Suffix when displaying discounted prices in the shop. 
+	* Allow for the decimal separator for thousands. 
+
+2014.11.25 - version 2.7.8
+	* Run all pricing module amounts through number normalization functions.  Uses the WooCommerce currency settings for decimal separators.
+
+2014.11.18 - version 2.7.7
+	* Fixes issues with variation discounts being displayed as discounted twice. 
+
+2014.11.12 - version 2.7.6
+	* Fix widget price display when using simple rules. 
+	
+2014.11.04 - version 2.7.5
+	* Enable proper display of 0 based advanced product rules on variable products when more than one rule present and those rules apply to different variations. 
+
+2014.10.30 - version 2.7.4
+	* Enable 0 based product rules on archive pages when the product rule is applied to specific variations.   Checks if is_single() before checking if the 
+		variation id matches. 
+
 2014.09.22 version 2.7.3
 	* Added filter, wc_dynamic_pricing_get_use_sale_price, to control if the discount should be applied to the sale price or to the regular price. 
 		Use apply_filters('wc_dynamic_pricing_get_use_sale_price', '__return_false'); to use regular prices for discounts. 
