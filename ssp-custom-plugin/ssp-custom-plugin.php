@@ -106,9 +106,16 @@ if(is_admin()) {
                     $files = $pdo->query("SELECT files.id, files.side, files.name, files.size, files.status, files.item_id, files.order_id, file_comments.comment FROM files LEFT JOIN file_comments ON file_comments.file_id = files.id WHERE order_id = {$proofOrderId} AND status NOT IN ('archived', 'deleted', 'uploaded', 'upload_backup')")->fetchAll();
 
                     $filesGroupedByItem = array();
+                    $itemStatuses = array();
 
                     $orderInfo = $pdo->query("SELECT `alt_email` FROM orders WHERE id = {$proofOrderId}")->fetch();
                     $orderHistory = $pdo->query("SELECT * FROM order_history WHERE order_id = {$proofOrderId} ORDER BY id DESC")->fetchAll();
+                    $productionStatuses = $pdo->query("SELECT * FROM calendar_status")->fetchAll();
+                    
+                    $orderItems = $pdo->query("SELECT * FROM items WHERE order_id = {$proofOrderId}")->fetchAll();
+                    foreach ($orderItems as $item) {
+                        $itemStatuses[$item['id']] = $item['status'];
+                    }
 
                     if ($orderInfo['alt_email']) {
                         $orderAltEmail= $orderInfo['alt_email'];
@@ -133,7 +140,7 @@ if(is_admin()) {
                         ksort($filesGroupedByItem[$itemId]);
                     }
                 ?>
-                <div id='ssp_order_info_<?php echo absint( $post->ID );?>' style="border-bottom: 8px solid rgb(236, 236, 236); display:none;">
+                <div id='ssp_order_info_<?php echo absint( $post->ID );?>' style="border-bottom: 8px solid rgb(236, 236, 236);">
 
                 <div class="woocommerce_order_items_wrapper wc-order-items-editable">
                 <table cellpadding="0" cellspacing="0" class="woocommerce_order_items" style="border-top: 1px solid rgb(234, 234, 234);">

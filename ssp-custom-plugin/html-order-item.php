@@ -12,6 +12,22 @@
         <?php endif; ?>
         <br>
         <span class="approval-link"><a href="<?php echo PROOF_DOMAIN_NAME; ?>/approval/<?php echo $item_id ?>" target="_blank">Approval page</a></span>&nbsp;&nbsp;&nbsp;<span class="approval-link artwork-issues-link"><a>Issues</a></span>
+        <br>
+        <div style="margin-top: 15px;">
+        <select class="item-status-select status-item-<?php echo $item_id ?>" data-item-id="<?php echo $item_id ?>" >
+            <?php foreach($productionStatuses as $status): ?>
+                <?php
+                    $selected = "";
+                    
+                    if ($status['id'] == $itemStatuses[$item_id]) {
+                        $selected = "selected";
+                    }
+                ?>
+                <option value="<?php echo $status['id']; ?>" <?php echo $selected; ?>><?php echo $status['name']; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <span class="status-set" style="display:none;">status set</span>
+        </div>
     </td>
 
     <?php do_action( 'woocommerce_admin_order_item_values', $_product, $item, absint( $item_id ) ); ?>
@@ -115,10 +131,9 @@ foreach ($filesGroupedByItem[$item_id] as $proofFile) {
             <div class="fileupload" style="padding: 0; margin: 0;" data-action="<?php echo PROOF_DOMAIN_NAME; ?>/upload/<?php echo ($post->ID) ?>/">
                 <div class="pseudo-input MAX_FILE_SIZE" data-value="524288000" /></div>
                 <span class="btn btn-link btn-small fileinput-button">
-                    <span>upload...</span>
+                    <span class="upload-span">upload...</span>
                     <input type="file" class="file">
                 </span>
-                <span class="upload-messages" style="font-size:0.8em; position: absolute; top: 4px;"></span>
                 <i class="icon-minus-sign abort-icon" style="display:none; cursor: pointer;"></i>
                 <div class="pseudo-input side" data-value="<?php echo $proofFile['side'] ?>" /></div>
                 <div class="pseudo-input order" data-value="<?php echo ($post->ID) ?>"></div>

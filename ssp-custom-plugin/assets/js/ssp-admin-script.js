@@ -94,6 +94,37 @@ function SaveCustomEmail(input) {
 }
 
 jQuery(document).ready(function($){
+    $('.item-status-select').on('change', function() {
+        var id = $(this).val();
+        var statusSpan = $(this).next();
+        setItemStatus($(this).data('item-id'), id, statusSpan);
+        
+        statusSpan.show().html('...');
+    });    
+    
+    function setItemStatus(itemId, status, statusSpan) {
+        jQuery.ajax({
+            type: "POST",
+            method: "POST",
+            url: phpVars.thisDomain + '/set-item-status',
+            data: {item: itemId, status: status},
+            success: function(response){
+                statusSpan.show().html('status set');
+            },
+            error: function(response){
+                statusSpan.show().html('failed to set status');
+            },
+            complete: function(response){
+                console.log('a');
+                setTimeout(function(){
+                    statusSpan.fadeOut(200);
+                }, 1000);
+            },
+                
+            dataType: "json"
+        });
+    }
+    
     function findFilesToUpdate() {
         return($('.file-status'));
     }
@@ -206,7 +237,7 @@ jQuery(document).ready(function($){
             progress: function (e, data) 
             {
                 var progress = Math.floor(data.loaded / data.total * 100);
-                data.context.find('.upload-messages').html(progress + '%');
+                data.context.find('.upload-span').html(progress + '%');
             },
             always: function (e, data) 
             {
@@ -215,16 +246,12 @@ jQuery(document).ready(function($){
             done: function (e, data) 
             {
                 if (data.context) {
-                    data.context.find('.upload-messages').html('OK');
+                    data.context.find('.upload-span').html('upload...');
                 }
             },
             fail: function (e, data) 
             {
-                if (data.errorThrown == 'abort') {
-                    data.context.find('.upload-messages').html('aborted');
-                } else if (data.errorThrown == 'Request Entity Too Large') {
-                    data.context.find('.upload-messages').html('too big');
-                }
+                data.context.find('.upload-span').html('failed');
             }
         }).on('fileuploadadd', function (e, data) {
             var form = $( "<form></form>", {
@@ -330,6 +357,8 @@ jQuery(document).ready(function($){
         for (var i=0; i<items.length; ++i) {
             var itemId = $(items[i]).data('value');
             formData.items.push(itemId);
+            console.log('.item-status-select.' + 'status-item-' + itemId);
+            $('.item-status-select.' + 'status-item-' + itemId).val(3);
         }
 
         var loaderBox;
@@ -497,6 +526,7 @@ jQuery(document).ready(function($){
                 form.find('input.item').each(function() {
                     var itemId = $(this).val();
                     var status = $('.file-status.belongs-to-item-' + itemId);
+                    $('.item-status-select.' + 'status-item-' + itemId).val(10);
                     status.attr(
                         'class',
                          status.attr('class').replace(/\blabel-[^ ]+\b/g, '')
