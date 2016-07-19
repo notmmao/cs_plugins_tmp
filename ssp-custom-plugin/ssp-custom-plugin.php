@@ -140,10 +140,10 @@ if(is_admin()) {
                         ksort($filesGroupedByItem[$itemId]);
                     }
                 ?>
-                <div id='ssp_order_info_<?php echo absint( $post->ID );?>' style="border-bottom: 8px solid rgb(236, 236, 236);">
+                <div id='ssp_order_info_<?php echo absint( $post->ID );?>' style="border-bottom: 8px solid rgb(236, 236, 236); display: none;">
 
                 <div class="woocommerce_order_items_wrapper wc-order-items-editable">
-                <table cellpadding="0" cellspacing="0" class="woocommerce_order_items" style="border-top: 1px solid rgb(234, 234, 234);">
+                <table cellpadding="0" cellspacing="0" class="woocommerce_order_items" style="border-top: 1px solid rgb(234, 234, 234); padding-left: 13px;">
                     <thead>
                         <tr>
                             <th></th>

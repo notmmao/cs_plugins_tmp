@@ -106,7 +106,7 @@ jQuery(document).ready(function($){
         jQuery.ajax({
             type: "POST",
             method: "POST",
-            url: phpVars.thisDomain + '/set-item-status',
+            url: phpVars.thisDomain + '/api/set-item-status',
             data: {item: itemId, status: status},
             success: function(response){
                 statusSpan.show().html('status set');
